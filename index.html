@@ -43,6 +43,35 @@
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen font-sans pb-10">
+  <!-- OVERLAY KUNCI PIN SEBELUM MASUK FORM -->
+  <div id="pin-overlay" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 backdrop-blur-sm no-print">
+    <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl text-center space-y-4 border border-slate-100">
+      <div class="w-14 h-14 bg-blue-50 text-blue-900 rounded-2xl flex items-center justify-center mx-auto text-2xl font-black shadow-inner border border-blue-100">
+        🔒
+      </div>
+      <div>
+        <h2 class="font-black text-slate-800 text-lg leading-snug">Akses QC Glazing</h2>
+        <p class="text-xs text-slate-400">PT. Lampung Bay Seafood</p>
+      </div>
+
+      <div class="space-y-2">
+        <input type="password" id="input-pin" inputmode="numeric" maxlength="6" placeholder="••••" 
+          class="w-full text-center tracking-[0.4em] text-3xl font-black py-2.5 border-2 border-slate-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-blue-50/20 font-mono transition">
+        <p id="pin-error" class="text-rose-600 text-xs font-bold hidden">⚠️ PIN Salah! Coba lagi.</p>
+        <p class="text-[10px] text-slate-400">PIN default: <b class="text-slate-600 font-mono">1234</b></p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button type="button" onclick="document.getElementById('input-pin').value=''" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs transition active:scale-95">
+          Hapus
+        </button>
+        <button type="button" onclick="checkPin()" class="py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-xs shadow-md transition active:scale-95">
+          Buka Form 🔓
+        </button>
+      </div>
+    </div>
+  </div>
+
 
   <!-- TOP BAR -->
   <header class="bg-blue-900 text-white shadow-md sticky top-0 z-30 no-print">
@@ -530,6 +559,7 @@
       SCRIPT_URL = url.trim();
       localStorage.setItem('QC_SCRIPT_URL', SCRIPT_URL);
       checkSheetStatus();
+      checkAuthSession();
       initSignPad('qc');
       initSignPad('kabag');
       initSignPad('sddc');
@@ -638,6 +668,37 @@
       }
     }
 
+    
+    // KONFIGURASI KUNCI PIN AKSES
+    const APP_PIN = "1234"; // Ganti 4 angka ini jika ingin mengubah PIN Anda
+
+    function checkPin() {
+      const pinInput = document.getElementById('input-pin');
+      const errorMsg = document.getElementById('pin-error');
+      if (pinInput.value === APP_PIN) {
+        document.getElementById('pin-overlay').classList.add('hidden');
+        sessionStorage.setItem('QC_AUTH_SESSION', 'valid');
+      } else {
+        errorMsg.classList.remove('hidden');
+        pinInput.value = '';
+        pinInput.focus();
+      }
+    }
+
+    function checkAuthSession() {
+      if (sessionStorage.getItem('QC_AUTH_SESSION') === 'valid') {
+        const overlay = document.getElementById('pin-overlay');
+        if (overlay) overlay.classList.add('hidden');
+      }
+      const pinInput = document.getElementById('input-pin');
+      if (pinInput) {
+        pinInput.addEventListener('keyup', (e) => {
+          if (e.key === 'Enter') checkPin();
+        });
+        pinInput.focus();
+      }
+    }
+
     let allBaskets = [];
     let activePage = 1;
 
@@ -665,6 +726,7 @@
 
       setupEvents();
       checkSheetStatus();
+      checkAuthSession();
       initSignPad('qc');
       initSignPad('kabag');
       initSignPad('sddc');
