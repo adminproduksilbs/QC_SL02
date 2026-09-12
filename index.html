@@ -143,7 +143,7 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Data otomatis disinkronkan langsung dengan Google Spreadsheet</span>
+          <span class="text-[10px] text-slate-400">Sinkronisasi langsung dengan Google Spreadsheet (Multi-user)</span>
         </div>
       </div>
       <div class="w-full sm:w-auto flex items-center gap-2">
@@ -298,7 +298,7 @@
     <!-- LOG 10 BASKET TERAKHIR -->
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Real-time Spreadsheet)</h3>
+        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Real-time Database)</h3>
         <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 40 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
@@ -367,10 +367,10 @@
           <div class="flex gap-1.5">
             <input type="date" id="doc-date" class="w-full border rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-blue-500 outline-none">
             <button type="button" onclick="loadDataFromSheets()" class="bg-blue-800 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs whitespace-nowrap shadow flex items-center gap-1 transition active:scale-95">
-              📥 Muat Data / Cetak
+              📥 Muat Data / Arsip
             </button>
           </div>
-          <span class="text-[10px] text-slate-400">Pilih tanggal untuk menarik data langsung dari Spreadsheet</span>
+          <span class="text-[10px] text-slate-400">Pilih tanggal untuk menarik data lama langsung dari Spreadsheet</span>
         </div>
 
         <div class="bg-blue-50/80 p-3 rounded-xl border border-blue-200 flex flex-col justify-center">
@@ -542,6 +542,7 @@
       document.getElementById('in-awal-time').value = curTime;
 
       checkAuthSession();
+      setupEvents();
       initSignPad('qc');
       initSignPad('kabag');
       initSignPad('sddc');
@@ -644,10 +645,6 @@
     function loadDataFromSheets() {
       fetchLiveData();
       alert("✅ Data berhasil dimuat ulang dari Google Spreadsheet!");
-    }
-
-    function resetAllData() {
-      alert("Data harian tersimpan aman di Google Spreadsheet.");
     }
 
     // OTORISASI ADMIN MODAL
@@ -1085,7 +1082,7 @@
         recentTbody.innerHTML = '';
         const recentDone = [...filled].reverse().slice(0, 10);
         if (recentDone.length === 0) {
-          recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal terpilih. Silakan input timbang awal di atas.</td></tr>`;
+          recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal ini. Silakan input timbang awal di atas.</td></tr>`;
         } else {
           recentDone.forEach(b => {
             let glazePctText = '-';
