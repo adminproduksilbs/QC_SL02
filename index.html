@@ -9,7 +9,7 @@
   <style>
     @media print {
       @page {
-        size: 210mm 330mm;
+        size: A4 portrait;
         margin: 0mm;
       }
       body {
@@ -28,7 +28,7 @@
       #print-page {
         display: block !important;
         width: 195mm !important;
-        min-height: 320mm !important;
+        min-height: 287mm !important;
         box-sizing: border-box;
         page-break-inside: avoid;
         page-break-after: avoid;
@@ -298,7 +298,7 @@
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir yang Ditimbang Hari Ini</h3>
-        <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 35 baris ada di <b>Panel Admin & Cetak</b></span>
+        <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 37 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
@@ -336,7 +336,7 @@
           <span>🛠️ Panel Admin QC</span>
           <span class="text-xs font-semibold px-2.5 py-0.5 bg-amber-100 text-amber-900 rounded-full">PIN: 2022 Terverifikasi</span>
         </h2>
-        <p class="text-xs text-slate-400">Pengaturan dokumen, tanda tangan digital, penarikan arsip, dan cetak PDF 1 halaman pas.</p>
+        <p class="text-xs text-slate-400">Pengaturan dokumen, tanda tangan digital, penarikan arsip, dan cetak PDF A4 1 halaman.</p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -383,9 +383,9 @@
         </div>
 
         <div class="bg-blue-50/80 p-3 rounded-xl border border-blue-200 flex flex-col justify-center">
-          <label class="block font-bold text-blue-900 mb-1">Pilih Halaman Cetak (Kapasitas: 35 Baris / Lembar)</label>
+          <label class="block font-bold text-blue-900 mb-1">Pilih Halaman Cetak (Kapasitas: 37 Baris / Lembar)</label>
           <select id="select-print-page" onchange="updatePreviewSheet()" class="w-full bg-white border border-blue-300 rounded-lg px-2.5 py-1.5 text-blue-900 font-bold outline-none">
-            <option value="1">Halaman 1 (Basket #1 - #35)</option>
+            <option value="1">Halaman 1 (Basket #1 - #37)</option>
           </select>
         </div>
       </div>
@@ -428,28 +428,28 @@
     <div id="print-page-wrapper" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 overflow-x-auto">
       <div class="flex items-center justify-between mb-3 no-print">
         <h3 class="font-bold text-sm text-slate-700 flex items-center gap-1.5">
-          <span>📄 Pratinjau Dokumen Cetak 1 Halaman F4 (Format F-QC-SL-02 Asli - 35 Baris)</span>
+          <span>📄 Pratinjau Dokumen Cetak 1 Halaman A4 (Format F-QC-SL-02 Asli - 37 Baris)</span>
         </h3>
-        <span class="text-xs text-slate-400">Hasil print preview akan persis 1 lembar seperti di bawah ini</span>
+        <span class="text-xs text-slate-400">Hasil print preview akan persis 1 lembar A4</span>
       </div>
 
-      <div id="print-page" class="bg-white mx-auto border border-slate-300 text-black text-[11px] leading-tight" style="width: 195mm; min-height: 320mm; margin: 0 auto; box-sizing: border-box; background: white;">
+      <div id="print-page" class="bg-white mx-auto border border-slate-300 text-black text-[11px] leading-tight" style="width: 195mm; min-height: 287mm; margin: 0 auto; box-sizing: border-box; background: white;">
         
         <!-- KOP HEADER -->
         <table class="w-full border-collapse border-[2px] border-black mb-1">
           <tr>
             <td class="border border-black text-center p-1.5 w-1/4 align-middle">
               <div class="flex flex-col items-center justify-center">
-                <img src="logo.png" alt="LBS" style="height: 46px; width: auto; max-width: 95px; margin: 0 auto 3px auto; display: block; object-fit: contain;">
+                <img src="logo.png" alt="LBS" style="height: 42px; width: auto; max-width: 90px; margin: 0 auto 2px auto; display: block; object-fit: contain;">
                 <div class="text-[9px] font-bold leading-tight">PT. Lampung Bay Seafood</div>
               </div>
             </td>
             <td class="border border-black text-center p-1 w-1/2 align-middle">
-              <div class="text-[12.5px] font-bold leading-snug">
+              <div class="text-[12px] font-bold leading-snug">
                 Catatan Timbangan Sebelum Glazing (De-Glaze) &<br>Timbang Glazing
               </div>
             </td>
-            <td class="border border-black p-1 text-[8.5px] w-1/4 align-top">
+            <td class="border border-black p-1 text-[8px] w-1/4 align-top">
               <div class="grid grid-cols-2"><span>Document No.</span> <b>: F-QC-SL-02</b></div>
               <div class="grid grid-cols-2"><span>Page / Halaman</span> <b id="preview-page-no">: 1 dari 1</b></div>
               <div class="grid grid-cols-2"><span>Revised No.</span> <b>: 02</b></div>
@@ -457,67 +457,67 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3" class="border border-black px-2 py-0.5 text-[8.5px]">
+            <td colspan="3" class="border border-black px-2 py-0.5 text-[8px]">
               Jl. Raya Tanjung Bintang No.101 Desa Serdang Kec. Tanjung Bintang
             </td>
           </tr>
         </table>
 
-        <div class="text-[10px] font-bold mb-1">
+        <div class="text-[9.5px] font-bold mb-1">
           Production Date : <span id="preview-prod-date" class="font-normal underline">................................</span>
         </div>
 
-        <!-- TABEL 35 BARIS PAS DI 1 LEMBAR -->
+        <!-- TABEL 37 BARIS PAS DI 1 LEMBAR A4 -->
         <table class="table-qc text-center">
           <thead>
-            <tr class="bg-slate-100 font-bold text-[9px]" style="height: 28px;">
-              <th style="width: 4%;">No<br><i class="text-[7.5px] font-normal">No</i></th>
-              <th style="width: 9%;">Time<br><i class="text-[7.5px] font-normal">Waktu</i></th>
+            <tr class="bg-slate-100 font-bold text-[8.5px]" style="height: 24px;">
+              <th style="width: 4%;">No<br><i class="text-[7px] font-normal">No</i></th>
+              <th style="width: 9%;">Time<br><i class="text-[7px] font-normal">Waktu</i></th>
               <th style="width: 7%;">Temp.<br>0°C</th>
-              <th style="width: 22%;">Product<br><i class="text-[7.5px] font-normal">Produk</i></th>
+              <th style="width: 22%;">Product<br><i class="text-[7px] font-normal">Produk</i></th>
               <th style="width: 14%;">(1)<br>Timbang Awal</th>
               <th style="width: 14%;">(2)<br>DEGLAZE WT</th>
               <th style="width: 16%;">(3)<br>TIMBANG GROSS<br>SETELAH GLAZING</th>
-              <th style="width: 14%;">Remarks<br><i class="text-[7.5px] font-normal">Keterangan</i></th>
+              <th style="width: 14%;">Remarks<br><i class="text-[7px] font-normal">Keterangan</i></th>
             </tr>
           </thead>
-          <tbody id="preview-tbody" class="font-mono text-[10px]">
-            <!-- 35 Baris Terisi Otomatis -->
+          <tbody id="preview-tbody" class="font-mono text-[9.5px]">
+            <!-- 37 Baris Terisi Otomatis -->
           </tbody>
         </table>
 
-        <div class="text-[8.5px] font-bold mt-1">
+        <div class="text-[8px] font-bold mt-1">
           Note : Pastikan tidak ada bunga es ketika timbang Deglaze WT
         </div>
 
         <!-- TANDA TANGAN -->
-        <div class="mt-2 grid grid-cols-3 text-center text-[9px]">
+        <div class="mt-1.5 grid grid-cols-3 text-center text-[8.5px]">
           <div>
             <u><b>Prepared by,</b></u><br>
-            <i class="text-[8px]">Dilaksanakan Oleh,</i>
-            <div class="h-12 flex items-center justify-center">
-              <img id="img-sig-qc" class="max-h-11 max-w-[120px] object-contain hidden" alt="TTD QC">
+            <i class="text-[7.5px]">Dilaksanakan Oleh,</i>
+            <div class="h-10 flex items-center justify-center">
+              <img id="img-sig-qc" class="max-h-9 max-w-[110px] object-contain hidden" alt="TTD QC">
             </div>
             <b>Quality Control Date,</b><br>
-            <i class="text-[8px]">Quality Control Tgl</i>
+            <i class="text-[7.5px]">Quality Control Tgl</i>
           </div>
           <div>
             <u><b>Checked by,</b></u><br>
-            <i class="text-[8px]">Diperiksa Oleh,</i>
-            <div class="h-12 flex items-center justify-center">
-              <img id="img-sig-kabag" class="max-h-11 max-w-[120px] object-contain hidden" alt="TTD Kabag">
+            <i class="text-[7.5px]">Diperiksa Oleh,</i>
+            <div class="h-10 flex items-center justify-center">
+              <img id="img-sig-kabag" class="max-h-9 max-w-[110px] object-contain hidden" alt="TTD Kabag">
             </div>
             <b>Production Kabag. Date,</b><br>
-            <i class="text-[8px]">Kabag Produksi. Tgl</i>
+            <i class="text-[7.5px]">Kabag Produksi. Tgl</i>
           </div>
           <div>
             <u><b>Approved by,</b></u><br>
-            <i class="text-[8px]">Disetujui Oleh,</i>
-            <div class="h-12 flex items-center justify-center">
-              <img id="img-sig-sddc" class="max-h-11 max-w-[120px] object-contain hidden" alt="TTD SDDC">
+            <i class="text-[7.5px]">Disetujui Oleh,</i>
+            <div class="h-10 flex items-center justify-center">
+              <img id="img-sig-sddc" class="max-h-9 max-w-[110px] object-contain hidden" alt="TTD SDDC">
             </div>
             <b>SDDC Date,</b><br>
-            <i class="text-[8px]">SDDC Tgl</i>
+            <i class="text-[7.5px]">SDDC Tgl</i>
           </div>
         </div>
 
@@ -528,7 +528,7 @@
 
   <!-- JAVASCRIPT LENGKAP -->
   <script>
-    const ROWS_PER_PAGE = 35;
+    const ROWS_PER_PAGE = 37;
     const APP_PIN = "0112";    // PIN Buka Aplikasi
     const ADMIN_PIN = "2022";  // PIN Khusus Panel Admin
     let isAdminUnlocked = false;
@@ -555,10 +555,8 @@
       if (opDate) opDate.value = newDate;
       document.getElementById('preview-prod-date').innerText = formatDateIndo(newDate);
 
-      // Muat data khusus untuk tanggal yang dipilih
       const loaded = loadDateData(newDate);
       if (!loaded) {
-        // Tanggal baru: mulai dari awal (No Basket #1, data kosong)
         allBaskets = createEmptyBaskets();
         saveToStorage();
       }
@@ -905,7 +903,7 @@
               temp: item.temp || '',
               prod: item.prod || 'Slipper Lobster',
               initWt: item.initWt || '',
-              deglazeWt: item.initWt || '', // DEGLAZE OTOMATIS SAMA DENGAN TIMBANG AWAL
+              deglazeWt: item.initWt || '',
               grossWt: item.grossWt || '',
               remarks: item.remarks || ''
             });
@@ -914,7 +912,7 @@
           const totalPages = Math.ceil(allBaskets.length / ROWS_PER_PAGE) || 1;
           const targetRows = totalPages * ROWS_PER_PAGE;
           for (let i = allBaskets.length + 1; i <= targetRows; i++) {
-            allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
+            allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: item.initWt || '', grossWt: '', remarks: '' });
           }
 
           updatePageSelector();
@@ -1031,7 +1029,6 @@
       }
     }
 
-    // SIMPAN TIMBANG AWAL: DEGLAZE WT OTOMATIS DIISI SAMA
     function handleTimbangAwal(e) {
       e.preventDefault();
       const no = parseInt(document.getElementById('in-awal-no').value);
@@ -1075,7 +1072,6 @@
       document.getElementById('in-awal-wt').focus();
     }
 
-    // SIMPAN TIMBANG GROSS
     function handleTimbangGross(e) {
       e.preventDefault();
       const no = parseInt(document.getElementById('in-gross-no').value);
@@ -1169,9 +1165,9 @@
       tbody.innerHTML = '';
 
       for (let i = 0; i < ROWS_PER_PAGE; i++) {
-        const item = pageItems[i] || { no: startIndex + i + 1, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' };
+        const item = pageItems[i] || { no: startIndex + i + 1, time: '', temp: '', prod: '', initWt: '', deglazeWt: item.initWt || '', grossWt: '', remarks: '' };
         const tr = document.createElement('tr');
-        tr.style.height = "18.8px";
+        tr.style.height = "19.5px";
 
         tr.innerHTML = `
           <td style="font-weight: bold;">${item.no}</td>
@@ -1185,65 +1181,19 @@
         `;
         tbody.appendChild(tr);
       }
-
-      const filled = allBaskets.filter(b => b.initWt !== '');
-      const done = allBaskets.filter(b => b.grossWt && b.grossWt !== '');
-      document.getElementById('stat-total-input').innerText = filled.length;
-      document.getElementById('stat-pending-input').innerText = filled.length - done.length;
-      document.getElementById('stat-done-input').innerText = done.length;
-
-      if (done.length > 0) {
-        let totalGlazePct = 0;
-        done.forEach(b => {
-          totalGlazePct += ((b.grossWt - b.initWt) / b.initWt) * 100;
-        });
-        document.getElementById('stat-avg-glaze').innerText = '+' + (totalGlazePct / done.length).toFixed(1) + '%';
-      } else {
-        document.getElementById('stat-avg-glaze').innerText = '- %';
-      }
-
-      const recentTbody = document.getElementById('operator-recent-tbody');
-      recentTbody.innerHTML = '';
-      const recentDone = [...filled].reverse().slice(0, 10);
-      if (recentDone.length === 0) {
-        recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal ini. Silakan input timbang awal di atas.</td></tr>`;
-      } else {
-        recentDone.forEach(b => {
-          let glazePctText = '-';
-          if (b.grossWt && b.initWt) {
-            const p = (((b.grossWt - b.initWt) / b.initWt) * 100).toFixed(1);
-            glazePctText = `<span class="font-bold text-emerald-600">+${p}%</span>`;
-          }
-          const row = document.createElement('tr');
-          row.className = "hover:bg-slate-50 transition";
-          row.innerHTML = `
-            <td class="py-2 px-3 font-bold text-blue-900">#${b.no}</td>
-            <td class="py-2 px-3 text-slate-600">${b.time || '-'}</td>
-            <td class="py-2 px-3 text-slate-600">${b.temp || '-'}°C</td>
-            <td class="py-2 px-3 text-slate-700">${b.prod || '-'}</td>
-            <td class="py-2 px-3 text-center font-bold">${formatKg(b.initWt)} kg</td>
-            <td class="py-2 px-3 text-center text-slate-700">${formatKg(b.deglazeWt || b.initWt)} kg</td>
-            <td class="py-2 px-3 text-center font-bold ${b.grossWt ? 'text-emerald-700' : 'text-slate-400'}">${b.grossWt ? formatKg(b.grossWt) + ' kg' : 'Menunggu...'}</td>
-            <td class="py-2 px-3 text-center">${glazePctText}</td>
-            <td class="py-2 px-3 text-slate-500 font-sans text-[11px]">${b.remarks || '-'}</td>
-          `;
-          recentTbody.appendChild(row);
-        });
-      }
     }
 
     function printSinglePage() {
-      renderAdminView();
       const tgl = document.getElementById('doc-date').value || 'laporan';
       document.getElementById('preview-prod-date').innerText = formatDateIndo(tgl);
 
       const element = document.getElementById('print-page');
       const opt = {
-        margin:       [4, 5, 4, 5],
+        margin:       [3, 4, 3, 4],
         filename:     `QC_Glazing_Slipper_Lobster_${tgl}.pdf`,
         image:        { type: 'jpeg', quality: 0.99 },
         html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false, windowWidth: 794 },
-        jsPDF:        { unit: 'mm', format: [210, 330], orientation: 'portrait' },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak:    { mode: ['avoid-all', 'css'] }
       };
 
