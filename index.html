@@ -66,7 +66,7 @@
         <input type="password" id="input-pin" inputmode="numeric" maxlength="6" placeholder="••••" 
           class="w-full text-center tracking-[0.4em] text-3xl font-black py-2.5 border-2 border-slate-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-blue-50/20 font-mono transition">
         <p id="pin-error" class="text-rose-600 text-xs font-bold hidden">⚠️ PIN Salah! Coba lagi.</p>
-        <p class="text-[10px] text-slate-400"> <b class="text-slate-600 font-mono"></b></p>
+        <p class="text-[10px] text-slate-400">PIN Masuk: <b class="text-slate-600 font-mono">0112</b></p>
       </div>
 
       <div class="grid grid-cols-2 gap-2 pt-1">
@@ -115,7 +115,7 @@
         <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
-          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood</p>
+          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02</p>
         </div>
       </div>
       
@@ -533,6 +533,9 @@
     const ADMIN_PIN = "2022";  // PIN Khusus Panel Admin
     let isAdminUnlocked = false;
 
+    // URL SPREADSHEET TERTANAM PERMANEN DI SEMUA DEVICE
+    let SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7WLMAaEUAH2iDvi-oDoZN3m_suGTjNaNVwmwXwXaYRW1kmYrz-FyBDc3FrBNS1tk/exec";
+
     const STORAGE_PREFIX = 'QC_GLAZING_LBS_DATA_';
 
     function getStorageKeyForDate(dateStr) {
@@ -822,23 +825,13 @@
       localStorage.removeItem('SIG_' + id.toUpperCase());
     }
 
-    // SPREADSHEET URL
-    let SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7WLMAaEUAH2iDvi-oDoZN3m_suGTjNaNVwmwXwXaYRW1kmYrz-FyBDc3FrBNS1tk/exec";
-    function saveScriptUrl(url) {
-      SCRIPT_URL = url.trim();
-      localStorage.setItem('QC_SCRIPT_URL', SCRIPT_URL);
-      checkSheetStatus();
-    }
-
     function checkSheetStatus() {
       const input = document.getElementById('script-url-input');
       const status = document.getElementById('sheet-status-text');
       if (input) input.value = SCRIPT_URL;
       
-      if (SCRIPT_URL && SCRIPT_URL.startsWith('http')) {
-        if (status) status.innerHTML = '<b class="text-emerald-800">🟢 Terhubung:</b> Setiap simpan timbangan, data otomatis dikirim ke Spreadsheet!';
-      } else {
-        if (status) status.innerHTML = '<span class="text-amber-700">⚪ Belum terhubung (Data tersimpan di memori browser). Tempel Web App URL Google Script di sini.</span>';
+      if (status) {
+        status.innerHTML = '<b class="text-emerald-800">🟢 Terhubung Otomatis:</b> Setiap simpan timbangan, data langsung masuk ke Spreadsheet!';
       }
     }
 
@@ -857,16 +850,6 @@
       });
     }
 
-    function testSheetConnection() {
-      const url = document.getElementById('script-url-input').value.trim();
-      saveScriptUrl(url);
-      if (url.startsWith('http')) {
-        alert("✅ URL Google Sheets berhasil disimpan! Mulai sekarang, setiap keranjang yang ditimbang otomatis tersimpan di Google Spreadsheet Anda.");
-      } else {
-        alert("⚠️ Mohon tempelkan URL Google Apps Script yang valid (berakhiran /exec).");
-      }
-    }
-
     function loadDataFromSheets() {
       const tgl = document.getElementById('doc-date').value;
       if (!tgl) {
@@ -874,7 +857,7 @@
         return;
       }
       if (!SCRIPT_URL || !SCRIPT_URL.startsWith('http')) {
-        alert("Aplikasi belum terhubung ke Google Sheets. Pastikan Web App URL sudah terpasang.");
+        alert("Aplikasi belum terhubung ke Google Sheets.");
         return;
       }
 
@@ -911,7 +894,7 @@
           const totalPages = Math.ceil(allBaskets.length / ROWS_PER_PAGE) || 1;
           const targetRows = totalPages * ROWS_PER_PAGE;
           for (let i = allBaskets.length + 1; i <= targetRows; i++) {
-            allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: item.initWt || '', grossWt: '', remarks: '' });
+            allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
           }
 
           updatePageSelector();
@@ -921,7 +904,7 @@
         .catch(err => {
           btn.innerText = originalText;
           btn.disabled = false;
-          alert("Gagal mengambil data dari Spreadsheet. Pastikan di Apps Script fungsi doGet() sudah dipasang dan di-Deploy ulang.");
+          alert("Gagal mengambil data dari Spreadsheet. Pastikan di Apps Script fungsi doGet() sudah dipasang.");
           console.error(err);
         });
     }
@@ -1164,7 +1147,7 @@
       tbody.innerHTML = '';
 
       for (let i = 0; i < ROWS_PER_PAGE; i++) {
-        const item = pageItems[i] || { no: startIndex + i + 1, time: '', temp: '', prod: '', initWt: '', deglazeWt: item.initWt || '', grossWt: '', remarks: '' };
+        const item = pageItems[i] || { no: startIndex + i + 1, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' };
         const tr = document.createElement('tr');
         tr.style.height = "17.5px";
 
@@ -1179,6 +1162,58 @@
           <td>${item.remarks || ''}</td>
         `;
         tbody.appendChild(tr);
+      }
+
+      const filled = allBaskets.filter(b => b.initWt !== '');
+      const done = allBaskets.filter(b => b.grossWt && b.grossWt !== '');
+      const statTotal = document.getElementById('stat-total-input');
+      const statPending = document.getElementById('stat-pending-input');
+      const statDone = document.getElementById('stat-done-input');
+      const statAvg = document.getElementById('stat-avg-glaze');
+
+      if (statTotal) statTotal.innerText = filled.length;
+      if (statPending) statPending.innerText = filled.length - done.length;
+      if (statDone) statDone.innerText = done.length;
+
+      if (done.length > 0 && statAvg) {
+        let totalGlazePct = 0;
+        done.forEach(b => {
+          totalGlazePct += ((b.grossWt - b.initWt) / b.initWt) * 100;
+        });
+        statAvg.innerText = '+' + (totalGlazePct / done.length).toFixed(1) + '%';
+      } else if (statAvg) {
+        statAvg.innerText = '- %';
+      }
+
+      const recentTbody = document.getElementById('operator-recent-tbody');
+      if (recentTbody) {
+        recentTbody.innerHTML = '';
+        const recentDone = [...filled].reverse().slice(0, 10);
+        if (recentDone.length === 0) {
+          recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal terpilih. Silakan input timbang awal di atas.</td></tr>`;
+        } else {
+          recentDone.forEach(b => {
+            let glazePctText = '-';
+            if (b.grossWt && b.initWt) {
+              const p = (((b.grossWt - b.initWt) / b.initWt) * 100).toFixed(1);
+              glazePctText = `<span class="font-bold text-emerald-600">+${p}%</span>`;
+            }
+            const row = document.createElement('tr');
+            row.className = "hover:bg-slate-50 transition";
+            row.innerHTML = `
+              <td class="py-2 px-3 font-bold text-blue-900">#${b.no}</td>
+              <td class="py-2 px-3 text-slate-600">${b.time || '-'}</td>
+              <td class="py-2 px-3 text-slate-600">${b.temp || '-'}°C</td>
+              <td class="py-2 px-3 text-slate-700">${b.prod || '-'}</td>
+              <td class="py-2 px-3 text-center font-bold">${formatKg(b.initWt)} kg</td>
+              <td class="py-2 px-3 text-center text-slate-700">${formatKg(b.deglazeWt || b.initWt)} kg</td>
+              <td class="py-2 px-3 text-center font-bold ${b.grossWt ? 'text-emerald-700' : 'text-slate-400'}">${b.grossWt ? formatKg(b.grossWt) + ' kg' : 'Menunggu...'}</td>
+              <td class="py-2 px-3 text-center">${glazePctText}</td>
+              <td class="py-2 px-3 text-slate-500 font-sans text-[11px]">${b.remarks || '-'}</td>
+            `;
+            recentTbody.appendChild(row);
+          });
+        }
       }
     }
 
