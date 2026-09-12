@@ -823,8 +823,7 @@
     }
 
     // SPREADSHEET URL
-    let SCRIPT_URL = localStorage.getItem('QC_SCRIPT_URL') || '';
-
+    let SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7WLMAaEUAH2iDvi-oDoZN3m_suGTjNaNVwmwXwXaYRW1kmYrz-FyBDc3FrBNS1tk/exec";
     function saveScriptUrl(url) {
       SCRIPT_URL = url.trim();
       localStorage.setItem('QC_SCRIPT_URL', SCRIPT_URL);
