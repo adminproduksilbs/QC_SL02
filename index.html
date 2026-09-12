@@ -143,12 +143,12 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Sinkronisasi langsung dengan Google Spreadsheet (Multi-user)</span>
+          <span class="text-[10px] text-slate-400">Sinkronisasi otomatis real-time dengan Google Spreadsheet</span>
         </div>
       </div>
       <div class="w-full sm:w-auto flex items-center gap-2">
         <input type="date" id="operator-prod-date" onchange="syncOperatorDate(this.value)" class="w-full sm:w-48 border-2 border-blue-300 bg-blue-50/50 rounded-xl px-3 py-2 font-bold text-blue-900 text-sm outline-none focus:ring-2 focus:ring-blue-500">
-        <button type="button" onclick="fetchLiveData()" class="bg-blue-900 text-white px-3 py-2 rounded-xl font-bold text-xs shadow hover:bg-blue-800 whitespace-nowrap">🔄 Refresh</button>
+        <button type="button" onclick="fetchLiveData()" class="bg-blue-900 text-white px-3.5 py-2 rounded-xl font-bold text-xs shadow hover:bg-blue-800 transition active:scale-95 whitespace-nowrap flex items-center gap-1">🔄 Refresh</button>
       </div>
     </div>
 
@@ -236,7 +236,7 @@
           </div>
 
           <div class="flex items-center justify-between pt-1">
-            <span class="text-[11px] text-slate-400">Tekan Enter atau klik Simpan</span>
+            <span class="text-[11px] text-slate-400">Otomatis berurutan +1</span>
             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg shadow transition flex items-center gap-1">
               <span>+ Simpan Timbang Awal</span>
             </button>
@@ -275,7 +275,7 @@
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-amber-800 mb-1">(3) Timbang Gross (g)*</label>
+              <label class="block font-semibold text-amber-800 mb-1">(2) Timbang Gross (g)*</label>
               <input type="number" step="1" id="in-gross-wt" placeholder="Contoh: 2780" required class="w-full border border-amber-300 bg-amber-50/50 rounded-lg px-2.5 py-1.5 font-bold text-slate-800 text-sm outline-none focus:ring-2 focus:ring-amber-500">
             </div>
             <div>
@@ -354,7 +354,7 @@
         <span class="text-xl">📊</span>
         <div>
           <span class="font-bold text-emerald-900">Database Status:</span>
-          <span class="text-emerald-700 ml-1">Terhubung langsung ke Google Spreadsheet secara online.</span>
+          <span class="text-emerald-700 ml-1">Terhubung langsung ke Google Spreadsheet secara online (Multi-user).</span>
         </div>
       </div>
     </div>
@@ -367,7 +367,7 @@
           <div class="flex gap-1.5">
             <input type="date" id="doc-date" class="w-full border rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-blue-500 outline-none">
             <button type="button" onclick="loadDataFromSheets()" class="bg-blue-800 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs whitespace-nowrap shadow flex items-center gap-1 transition active:scale-95">
-              📥 Muat Data / Arsip
+              📥 Muat Arsip / Cetak
             </button>
           </div>
           <span class="text-[10px] text-slate-400">Pilih tanggal untuk menarik data lama langsung dari Spreadsheet</span>
@@ -548,7 +548,7 @@
       initSignPad('sddc');
       loadSavedSignatures();
 
-      // Langsung tarik data real-time dari Spreadsheet
+      // Tarik data real-time otomatis dari Spreadsheet
       fetchLiveData();
     });
 
@@ -613,7 +613,6 @@
             });
           }
 
-          // Genapkan baris menjadi kelipatan 40 penuh
           const totalPages = Math.max(1, Math.ceil(allBaskets.length / ROWS_PER_PAGE));
           const targetRows = totalPages * ROWS_PER_PAGE;
           for (let i = allBaskets.length + 1; i <= targetRows; i++) {
@@ -626,7 +625,7 @@
           updatePreviewSheet();
         })
         .catch(err => {
-          console.error("Gagal mengambil data real-time dari spreadsheet:", err);
+          console.error("Gagal mengambil data dari spreadsheet:", err);
           if (allBaskets.length === 0) {
             allBaskets = createEmptyBaskets();
             updatePreviewSheet();
@@ -644,7 +643,7 @@
 
     function loadDataFromSheets() {
       fetchLiveData();
-      alert("✅ Data berhasil dimuat ulang dari Google Spreadsheet!");
+      alert("✅ Data arsip tanggal tersebut berhasil dimuat!");
     }
 
     // OTORISASI ADMIN MODAL
@@ -915,11 +914,10 @@
     function syncGrossAwalWt() {
       const selNo = parseInt(document.getElementById('in-gross-no').value);
       const item = allBaskets.find(b => b.no === selNo);
-      const displayWt = document.getElementById('display-awal-wt');
-      if (item && item.initWt && displayWt) {
-        displayWt.innerText = item.initWt + ' gram';
-      } else if (displayWt) {
-        displayWt.innerText = '- gram';
+      if (item && item.initWt) {
+        document.getElementById('display-awal-wt').innerText = item.initWt + ' gram';
+      } else {
+        document.getElementById('display-awal-wt').innerText = '- gram';
       }
     }
 
@@ -1115,7 +1113,7 @@
 
       const element = document.getElementById('print-page');
       const opt = {
-        margin:       [2, 4, 3, 4],
+        margin:       [3, 4, 3, 4],
         filename:     `QC_Glazing_Slipper_Lobster_${tgl}.pdf`,
         image:        { type: 'jpeg', quality: 0.99 },
         html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false, windowWidth: 794 },
