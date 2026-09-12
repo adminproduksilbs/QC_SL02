@@ -143,7 +143,7 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Data otomatis ditarik langsung dari Google Spreadsheet</span>
+          <span class="text-[10px] text-slate-400">Data otomatis disinkronkan langsung dengan Google Spreadsheet</span>
         </div>
       </div>
       <div class="w-full sm:w-auto flex items-center gap-2">
@@ -260,7 +260,7 @@
         <form id="form-timbang-gross" onsubmit="handleTimbangGross(event)" class="space-y-3 text-xs">
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-slate-600 mb-1">Pilih Basket Antrean</label>
+              <label class="block font-semibold text-slate-600 mb-1">Pilih Basket Antrean (Urut Terendah)</label>
               <select id="in-gross-no" onchange="syncGrossAwalWt()" class="w-full border border-amber-300 bg-amber-50/40 rounded-lg px-2.5 py-2 font-bold text-slate-800 outline-none focus:ring-2 focus:ring-amber-500">
                 <option value="">-- Pilih Keranjang --</option>
               </select>
@@ -547,7 +547,7 @@
       initSignPad('sddc');
       loadSavedSignatures();
 
-      // Langsung tarik data dari spreadsheet berdasarkan tanggal hari ini
+      // Langsung tarik data real-time dari Spreadsheet
       fetchLiveData();
     });
 
@@ -647,7 +647,7 @@
     }
 
     function resetAllData() {
-      alert("Fitur Reset harian dikendalikan langsung melalui Google Spreadsheet.");
+      alert("Data harian tersimpan aman di Google Spreadsheet.");
     }
 
     // OTORISASI ADMIN MODAL
@@ -863,7 +863,7 @@
         body: JSON.stringify(dataObj)
       }).then(() => {
         console.log("Berhasil terkirim ke Google Sheets:", dataObj);
-        setTimeout(fetchLiveData, 1000); // Ambil data terbaru secara otomatis setelah kirim
+        setTimeout(fetchLiveData, 1200); 
       }).catch(err => {
         console.warn("Gagal sinkron ke Sheets:", err);
       });
@@ -878,9 +878,17 @@
     }
 
     function refreshNextAwalNo() {
-      const filled = allBaskets.filter(b => b.initWt !== '');
-      const nextNo = filled.length + 1;
-      document.getElementById('in-awal-no').value = nextNo;
+      let maxNo = 0;
+      allBaskets.forEach(b => {
+        if (b.initWt !== '' && b.no > maxNo) {
+          maxNo = b.no;
+        }
+      });
+      const nextNo = maxNo + 1;
+      const inputNo = document.getElementById('in-awal-no');
+      if (inputNo) {
+        inputNo.value = nextNo;
+      }
     }
 
     function refreshGrossDropdown() {
@@ -888,7 +896,9 @@
       if (!sel) return;
       sel.innerHTML = '<option value="">-- Pilih Keranjang --</option>';
 
-      const pending = allBaskets.filter(b => b.initWt !== '' && (!b.grossWt || b.grossWt === ''));
+      let pending = allBaskets.filter(b => b.initWt !== '' && (!b.grossWt || b.grossWt === ''));
+      pending.sort((a, b) => a.no - b.no);
+
       pending.forEach(b => {
         const opt = document.createElement('option');
         opt.value = b.no;
