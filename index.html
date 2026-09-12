@@ -115,7 +115,7 @@
         <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
-          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02</p>
+          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood</p>
         </div>
       </div>
       
@@ -301,7 +301,7 @@
         <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 40 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+        <table class="w-full text-left border-collapse min-w-[650px]">
           <thead>
             <tr class="bg-slate-50 text-slate-600 border-b">
               <th class="py-2 px-3">No</th>
@@ -1165,7 +1165,7 @@
       tbody.innerHTML = '';
 
       for (let i = 0; i < ROWS_PER_PAGE; i++) {
-        const item = pageItems[i] || { no: startIndex + i + 1, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' };
+        const item = pageItems[i] || { no: startIndex + i + 1, time: '', temp: '', prod: '', initWt: '', deglazeWt: item.initWt || '', grossWt: '', remarks: '' };
         const tr = document.createElement('tr');
         tr.style.height = "17.5px";
 
