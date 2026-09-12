@@ -143,11 +143,12 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Setiap ganti tanggal baru, form timbangan dimulai dari awal (Basket #1)</span>
+          <span class="text-[10px] text-slate-400">Data otomatis ditarik langsung dari Google Spreadsheet</span>
         </div>
       </div>
-      <div class="w-full sm:w-auto">
+      <div class="w-full sm:w-auto flex items-center gap-2">
         <input type="date" id="operator-prod-date" onchange="syncOperatorDate(this.value)" class="w-full sm:w-48 border-2 border-blue-300 bg-blue-50/50 rounded-xl px-3 py-2 font-bold text-blue-900 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+        <button type="button" onclick="fetchLiveData()" class="bg-blue-900 text-white px-3 py-2 rounded-xl font-bold text-xs shadow hover:bg-blue-800 whitespace-nowrap">🔄 Refresh</button>
       </div>
     </div>
 
@@ -297,7 +298,7 @@
     <!-- LOG 10 BASKET TERAKHIR -->
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir yang Ditimbang Hari Ini</h3>
+        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Real-time Spreadsheet)</h3>
         <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 40 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
@@ -316,7 +317,7 @@
             </tr>
           </thead>
           <tbody id="operator-recent-tbody" class="divide-y divide-slate-100 font-mono">
-            <!-- Diisi live oleh JS -->
+            <!-- Diisi live oleh Spreadsheet -->
           </tbody>
         </table>
       </div>
@@ -340,10 +341,6 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="resetAllData()" class="bg-rose-700 hover:bg-rose-600 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow flex items-center gap-1.5 transition active:scale-95">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-          Reset Data Tanggal Ini
-        </button>
         <button onclick="printSinglePage()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 flex items-center gap-2 transition active:scale-95 ring-2 ring-emerald-300">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
           Cetak 1 Halaman PDF
@@ -356,15 +353,9 @@
       <div class="flex items-center gap-2">
         <span class="text-xl">📊</span>
         <div>
-          <span class="font-bold text-emerald-900">Koneksi Google Sheets:</span>
-          <span class="text-emerald-700 ml-1" id="sheet-status-text">Masukkan Web App URL agar data otomatis terkirim ke Spreadsheet</span>
+          <span class="font-bold text-emerald-900">Database Status:</span>
+          <span class="text-emerald-700 ml-1">Terhubung langsung ke Google Spreadsheet secara online.</span>
         </div>
-      </div>
-      <div class="flex items-center gap-2 flex-1 sm:flex-none">
-        <input type="text" id="script-url-input" placeholder="Tempel URL Apps Script (akhiran /exec)..." onchange="saveScriptUrl(this.value)" class="w-full sm:w-80 bg-white border border-emerald-300 rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-1 focus:ring-emerald-500">
-        <button type="button" onclick="testSheetConnection()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs whitespace-nowrap shadow">
-          Simpan URL
-        </button>
       </div>
     </div>
 
@@ -376,10 +367,10 @@
           <div class="flex gap-1.5">
             <input type="date" id="doc-date" class="w-full border rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-blue-500 outline-none">
             <button type="button" onclick="loadDataFromSheets()" class="bg-blue-800 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs whitespace-nowrap shadow flex items-center gap-1 transition active:scale-95">
-              📥 Muat Arsip
+              📥 Muat Data / Cetak
             </button>
           </div>
-          <span class="text-[10px] text-slate-400">Pilih tanggal lampau lalu klik "Muat Arsip" untuk mencetak dokumen tanggal sebelumnya</span>
+          <span class="text-[10px] text-slate-400">Pilih tanggal untuk menarik data langsung dari Spreadsheet</span>
         </div>
 
         <div class="bg-blue-50/80 p-3 rounded-xl border border-blue-200 flex flex-col justify-center">
@@ -536,10 +527,110 @@
     // URL SPREADSHEET TERTANAM PERMANEN DI SEMUA DEVICE
     let SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7WLMAaEUAH2iDvi-oDoZN3m_suGTjNaNVwmwXwXaYRW1kmYrz-FyBDc3FrBNS1tk/exec";
 
-    const STORAGE_PREFIX = 'QC_GLAZING_LBS_DATA_';
+    let allBaskets = [];
+    let activePage = 1;
 
-    function getStorageKeyForDate(dateStr) {
-      return STORAGE_PREFIX + (dateStr || document.getElementById('doc-date').value || 'DEFAULT');
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('doc-date').value = today;
+      const opDate = document.getElementById('operator-prod-date');
+      if (opDate) opDate.value = today;
+      document.getElementById('preview-prod-date').innerText = formatDateIndo(today);
+
+      const now = new Date();
+      const curTime = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('in-awal-time').value = curTime;
+
+      checkAuthSession();
+      initSignPad('qc');
+      initSignPad('kabag');
+      initSignPad('sddc');
+      loadSavedSignatures();
+
+      // Langsung tarik data dari spreadsheet berdasarkan tanggal hari ini
+      fetchLiveData();
+    });
+
+    function setupEvents() {
+      document.getElementById('doc-date').addEventListener('change', (e) => {
+        onDateChanged(e.target.value);
+      });
+
+      const adminPinInput = document.getElementById('input-admin-pin');
+      if (adminPinInput) {
+        adminPinInput.addEventListener('keyup', (e) => {
+          if (e.key === 'Enter') verifyAdminPin();
+        });
+      }
+
+      document.getElementById('in-gross-wt').addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        const selNo = parseInt(document.getElementById('in-gross-no').value);
+        const item = allBaskets.find(b => b.no === selNo);
+        if (item && item.initWt && val) {
+          const pct = (((val - item.initWt) / item.initWt) * 100).toFixed(1);
+          document.getElementById('calculated-glaze').innerText = `Kenaikan Glaze: +${pct}%`;
+        } else {
+          document.getElementById('calculated-glaze').innerText = '';
+        }
+      });
+    }
+
+    function onDateChanged(newDate) {
+      if (!newDate) return;
+      document.getElementById('doc-date').value = newDate;
+      const opDate = document.getElementById('operator-prod-date');
+      if (opDate) opDate.value = newDate;
+      document.getElementById('preview-prod-date').innerText = formatDateIndo(newDate);
+      fetchLiveData();
+    }
+
+    function syncOperatorDate(val) {
+      onDateChanged(val);
+    }
+
+    function fetchLiveData() {
+      const curDate = document.getElementById('operator-prod-date').value || document.getElementById('doc-date').value;
+      if (!SCRIPT_URL) return;
+
+      fetch(SCRIPT_URL + "?tanggal=" + encodeURIComponent(curDate))
+        .then(res => res.json())
+        .then(data => {
+          allBaskets = [];
+          if (data && data.length > 0) {
+            data.forEach(item => {
+              allBaskets.push({
+                no: parseInt(item.no) || (allBaskets.length + 1),
+                time: item.time || '',
+                temp: item.temp || '',
+                prod: item.prod || 'Slipper Lobster',
+                initWt: item.initWt || '',
+                deglazeWt: item.initWt || '',
+                grossWt: item.grossWt || '',
+                remarks: item.remarks || ''
+              });
+            });
+          }
+
+          // Genapkan baris menjadi kelipatan 40 penuh
+          const totalPages = Math.max(1, Math.ceil(allBaskets.length / ROWS_PER_PAGE));
+          const targetRows = totalPages * ROWS_PER_PAGE;
+          for (let i = allBaskets.length + 1; i <= targetRows; i++) {
+            allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
+          }
+
+          refreshNextAwalNo();
+          refreshGrossDropdown();
+          updatePageSelector();
+          updatePreviewSheet();
+        })
+        .catch(err => {
+          console.error("Gagal mengambil data real-time dari spreadsheet:", err);
+          if (allBaskets.length === 0) {
+            allBaskets = createEmptyBaskets();
+            updatePreviewSheet();
+          }
+        });
     }
 
     function createEmptyBaskets() {
@@ -550,74 +641,13 @@
       return list;
     }
 
-    // SINKRONISASI TANGGAL & RESET/MUAT DATA SESUAI TANGGAL TERSEBUT
-    function onDateChanged(newDate) {
-      if (!newDate) return;
-      document.getElementById('doc-date').value = newDate;
-      const opDate = document.getElementById('operator-prod-date');
-      if (opDate) opDate.value = newDate;
-      document.getElementById('preview-prod-date').innerText = formatDateIndo(newDate);
-
-      const loaded = loadDateData(newDate);
-      if (!loaded) {
-        allBaskets = createEmptyBaskets();
-        saveToStorage();
-      }
-
-      refreshNextAwalNo();
-      refreshGrossDropdown();
-      updatePageSelector();
-      updatePreviewSheet();
-    }
-
-    function syncOperatorDate(val) {
-      onDateChanged(val);
-    }
-
-    function saveToStorage() {
-      const curDate = document.getElementById('doc-date').value;
-      const key = getStorageKeyForDate(curDate);
-      const payload = {
-        docDate: curDate,
-        baskets: allBaskets
-      };
-      localStorage.setItem(key, JSON.stringify(payload));
-      localStorage.setItem('QC_LAST_ACTIVE_DATE', curDate);
-    }
-
-    function loadDateData(dateStr) {
-      const key = getStorageKeyForDate(dateStr);
-      const saved = localStorage.getItem(key);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed.baskets && parsed.baskets.length > 0) {
-            allBaskets = parsed.baskets;
-            return true;
-          }
-        } catch(e) {
-          console.error("Gagal load storage untuk tanggal " + dateStr, e);
-        }
-      }
-      return false;
-    }
-
-    function loadFromStorage() {
-      const today = document.getElementById('doc-date').value;
-      return loadDateData(today);
+    function loadDataFromSheets() {
+      fetchLiveData();
+      alert("✅ Data berhasil dimuat ulang dari Google Spreadsheet!");
     }
 
     function resetAllData() {
-      const curDate = document.getElementById('doc-date').value;
-      if (confirm(`⚠️ Kosongkan form timbangan untuk tanggal ${formatDateIndo(curDate)} dan mulai dari awal (Basket #1)?\n\nCatatan: Tanda tangan digital tetap disimpan.`)) {
-        localStorage.removeItem(getStorageKeyForDate(curDate));
-        allBaskets = createEmptyBaskets();
-        saveToStorage();
-        refreshNextAwalNo();
-        refreshGrossDropdown();
-        updatePageSelector();
-        updatePreviewSheet();
-      }
+      alert("Fitur Reset harian dikendalikan langsung melalui Google Spreadsheet.");
     }
 
     // OTORISASI ADMIN MODAL
@@ -691,7 +721,6 @@
       }, 50);
     }
 
-    // CHECK PIN UTAMA
     function checkPin() {
       const pinInput = document.getElementById('input-pin');
       const errorMsg = document.getElementById('pin-error');
@@ -719,7 +748,6 @@
       }
     }
 
-    // TANDA TANGAN DIGITAL
     const signPads = {};
 
     function initSignPad(id) {
@@ -825,16 +853,6 @@
       localStorage.removeItem('SIG_' + id.toUpperCase());
     }
 
-    function checkSheetStatus() {
-      const input = document.getElementById('script-url-input');
-      const status = document.getElementById('sheet-status-text');
-      if (input) input.value = SCRIPT_URL;
-      
-      if (status) {
-        status.innerHTML = '<b class="text-emerald-800">🟢 Terhubung Otomatis:</b> Setiap simpan timbangan, data langsung masuk ke Spreadsheet!';
-      }
-    }
-
     function sendToSpreadsheet(dataObj) {
       if (!SCRIPT_URL || !SCRIPT_URL.startsWith('http')) return;
 
@@ -845,125 +863,9 @@
         body: JSON.stringify(dataObj)
       }).then(() => {
         console.log("Berhasil terkirim ke Google Sheets:", dataObj);
+        setTimeout(fetchLiveData, 1000); // Ambil data terbaru secara otomatis setelah kirim
       }).catch(err => {
         console.warn("Gagal sinkron ke Sheets:", err);
-      });
-    }
-
-    function loadDataFromSheets() {
-      const tgl = document.getElementById('doc-date').value;
-      if (!tgl) {
-        alert("Pilih tanggal yang ingin dicetak terlebih dahulu!");
-        return;
-      }
-      if (!SCRIPT_URL || !SCRIPT_URL.startsWith('http')) {
-        alert("Aplikasi belum terhubung ke Google Sheets.");
-        return;
-      }
-
-      const btn = event.target;
-      const originalText = btn.innerText;
-      btn.innerText = "⏳ Memuat...";
-      btn.disabled = true;
-
-      fetch(SCRIPT_URL + "?tanggal=" + encodeURIComponent(tgl))
-        .then(res => res.json())
-        .then(data => {
-          btn.innerText = originalText;
-          btn.disabled = false;
-
-          if (!data || data.length === 0) {
-            alert("Tidak ditemukan data timbangan pada tanggal: " + formatDateIndo(tgl));
-            return;
-          }
-
-          allBaskets = [];
-          data.forEach(item => {
-            allBaskets.push({
-              no: parseInt(item.no) || (allBaskets.length + 1),
-              time: item.time || '',
-              temp: item.temp || '',
-              prod: item.prod || 'Slipper Lobster',
-              initWt: item.initWt || '',
-              deglazeWt: item.initWt || '',
-              grossWt: item.grossWt || '',
-              remarks: item.remarks || ''
-            });
-          });
-
-          const totalPages = Math.ceil(allBaskets.length / ROWS_PER_PAGE) || 1;
-          const targetRows = totalPages * ROWS_PER_PAGE;
-          for (let i = allBaskets.length + 1; i <= targetRows; i++) {
-            allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
-          }
-
-          updatePageSelector();
-          updatePreviewSheet();
-          alert(`✅ Berhasil memuat ${data.length} keranjang dari tanggal ${formatDateIndo(tgl)}. Siap dicetak!`);
-        })
-        .catch(err => {
-          btn.innerText = originalText;
-          btn.disabled = false;
-          alert("Gagal mengambil data dari Spreadsheet. Pastikan di Apps Script fungsi doGet() sudah dipasang.");
-          console.error(err);
-        });
-    }
-
-    let allBaskets = [];
-    let activePage = 1;
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('doc-date').value = today;
-      const opDate = document.getElementById('operator-prod-date');
-      if (opDate) opDate.value = today;
-      document.getElementById('preview-prod-date').innerText = formatDateIndo(today);
-
-      const now = new Date();
-      const curTime = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-      document.getElementById('in-awal-time').value = curTime;
-
-      const hasSaved = loadDateData(today);
-      if (!hasSaved) {
-        allBaskets = createEmptyBaskets();
-        saveToStorage();
-      }
-
-      setupEvents();
-      checkSheetStatus();
-      checkAuthSession();
-      initSignPad('qc');
-      initSignPad('kabag');
-      initSignPad('sddc');
-      loadSavedSignatures();
-      refreshNextAwalNo();
-      refreshGrossDropdown();
-      updatePageSelector();
-      updatePreviewSheet();
-    });
-
-    function setupEvents() {
-      document.getElementById('doc-date').addEventListener('change', (e) => {
-        onDateChanged(e.target.value);
-      });
-
-      const adminPinInput = document.getElementById('input-admin-pin');
-      if (adminPinInput) {
-        adminPinInput.addEventListener('keyup', (e) => {
-          if (e.key === 'Enter') verifyAdminPin();
-        });
-      }
-
-      document.getElementById('in-gross-wt').addEventListener('input', (e) => {
-        const val = parseFloat(e.target.value);
-        const selNo = parseInt(document.getElementById('in-gross-no').value);
-        const item = allBaskets.find(b => b.no === selNo);
-        if (item && item.initWt && val) {
-          const pct = (((val - item.initWt) / item.initWt) * 100).toFixed(1);
-          document.getElementById('calculated-glaze').innerText = `Kenaikan Glaze: +${pct}%`;
-        } else {
-          document.getElementById('calculated-glaze').innerText = '';
-        }
       });
     }
 
@@ -983,6 +885,7 @@
 
     function refreshGrossDropdown() {
       const sel = document.getElementById('in-gross-no');
+      if (!sel) return;
       sel.innerHTML = '<option value="">-- Pilih Keranjang --</option>';
 
       const pending = allBaskets.filter(b => b.initWt !== '' && (!b.grossWt || b.grossWt === ''));
@@ -997,17 +900,19 @@
         sel.value = pending[0].no;
         syncGrossAwalWt();
       } else {
-        document.getElementById('display-awal-wt').innerText = '- gram';
+        const displayWt = document.getElementById('display-awal-wt');
+        if (displayWt) displayWt.innerText = '- gram';
       }
     }
 
     function syncGrossAwalWt() {
       const selNo = parseInt(document.getElementById('in-gross-no').value);
       const item = allBaskets.find(b => b.no === selNo);
-      if (item && item.initWt) {
-        document.getElementById('display-awal-wt').innerText = item.initWt + ' gram';
-      } else {
-        document.getElementById('display-awal-wt').innerText = '- gram';
+      const displayWt = document.getElementById('display-awal-wt');
+      if (item && item.initWt && displayWt) {
+        displayWt.innerText = item.initWt + ' gram';
+      } else if (displayWt) {
+        displayWt.innerText = '- gram';
       }
     }
 
@@ -1019,23 +924,7 @@
       const prod = document.getElementById('in-awal-prod').value || 'Slipper Lobster';
       const initWt = parseFloat(document.getElementById('in-awal-wt').value);
 
-      let idx = allBaskets.findIndex(b => b.no === no);
-      if (idx === -1) {
-        allBaskets.push({ no, time, temp, prod, initWt, deglazeWt: initWt, grossWt: '', remarks: '' });
-      } else {
-        allBaskets[idx].time = time;
-        allBaskets[idx].temp = temp;
-        allBaskets[idx].prod = prod;
-        allBaskets[idx].initWt = initWt;
-        allBaskets[idx].deglazeWt = initWt;
-      }
-
       document.getElementById('in-awal-wt').value = '';
-      refreshNextAwalNo();
-      refreshGrossDropdown();
-      updatePageSelector();
-      saveToStorage();
-      updatePreviewSheet();
 
       sendToSpreadsheet({
         aksi: 'TIMBANG_AWAL',
@@ -1065,35 +954,27 @@
       const grossWt = parseFloat(document.getElementById('in-gross-wt').value);
       const remarks = document.getElementById('in-gross-remarks').value;
 
-      let idx = allBaskets.findIndex(b => b.no === no);
-      if (idx !== -1) {
-        allBaskets[idx].grossWt = grossWt;
-        if (remarks) allBaskets[idx].remarks = remarks;
-      }
+      const item = allBaskets.find(b => b.no === no);
+      if (!item) return;
 
       document.getElementById('in-gross-wt').value = '';
       document.getElementById('in-gross-remarks').value = '';
       document.getElementById('calculated-glaze').innerText = '';
 
-      refreshGrossDropdown();
-      saveToStorage();
-      updatePreviewSheet();
-
-      const updatedItem = allBaskets[idx];
       let pct = '';
-      if (updatedItem && updatedItem.initWt && updatedItem.grossWt) {
-        pct = (((updatedItem.grossWt - updatedItem.initWt) / updatedItem.initWt) * 100).toFixed(1) + '%';
+      if (item.initWt && grossWt) {
+        pct = (((grossWt - item.initWt) / item.initWt) * 100).toFixed(1) + '%';
       }
 
       sendToSpreadsheet({
         aksi: 'TIMBANG_GROSS',
         tanggal: document.getElementById('doc-date').value,
         no_basket: no,
-        waktu: updatedItem.time,
-        temp: updatedItem.temp,
-        produk: updatedItem.prod,
-        timbang_awal: updatedItem.initWt,
-        deglaze_wt: updatedItem.deglazeWt || updatedItem.initWt,
+        waktu: item.time,
+        temp: item.temp,
+        produk: item.prod,
+        timbang_awal: item.initWt,
+        deglaze_wt: item.initWt,
         timbang_gross: grossWt,
         glaze_pct: pct,
         remarks: remarks
@@ -1103,6 +984,7 @@
     function updatePageSelector() {
       const totalPages = Math.max(1, Math.ceil(allBaskets.length / ROWS_PER_PAGE));
       const sel = document.getElementById('select-print-page');
+      if (!sel) return;
       const curVal = sel.value;
       sel.innerHTML = '';
 
@@ -1138,12 +1020,14 @@
     function updatePreviewSheet() {
       activePage = parseInt(document.getElementById('select-print-page').value) || 1;
       const totalPages = Math.max(1, Math.ceil(allBaskets.length / ROWS_PER_PAGE));
-      document.getElementById('preview-page-no').innerText = `: ${activePage} dari ${totalPages}`;
+      const pageNoEl = document.getElementById('preview-page-no');
+      if (pageNoEl) pageNoEl.innerText = `: ${activePage} dari ${totalPages}`;
 
       const startIndex = (activePage - 1) * ROWS_PER_PAGE;
       const pageItems = allBaskets.slice(startIndex, startIndex + ROWS_PER_PAGE);
 
       const tbody = document.getElementById('preview-tbody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
       for (let i = 0; i < ROWS_PER_PAGE; i++) {
@@ -1166,6 +1050,7 @@
 
       const filled = allBaskets.filter(b => b.initWt !== '');
       const done = allBaskets.filter(b => b.grossWt && b.grossWt !== '');
+      
       const statTotal = document.getElementById('stat-total-input');
       const statPending = document.getElementById('stat-pending-input');
       const statDone = document.getElementById('stat-done-input');
