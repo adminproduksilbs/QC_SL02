@@ -10,7 +10,7 @@
     @media print {
       @page {
         size: 210mm 330mm;
-        margin: 4mm 6mm;
+        margin: 0mm;
       }
       body {
         background: white !important;
@@ -27,8 +27,8 @@
       }
       #print-page {
         display: block !important;
-        width: 100% !important;
-        max-width: 198mm !important;
+        width: 195mm !important;
+        min-height: 320mm !important;
         box-sizing: border-box;
         page-break-inside: avoid;
         page-break-after: avoid;
@@ -112,7 +112,7 @@
   <header class="bg-blue-900 text-white shadow-md sticky top-0 z-30 no-print">
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAMAAACX4X3RAAAAA1BMVEUAAACnej3aAAAAR0lEQVR4nO3BMQEAAADCIPunNsc3YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AYagAAEaV3gJAAAAAElFTkSuQmCC" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain">
+        <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
           <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02</p>
@@ -433,14 +433,14 @@
         <span class="text-xs text-slate-400">Hasil print preview akan persis 1 lembar seperti di bawah ini</span>
       </div>
 
-      <div id="print-page" class="bg-white mx-auto border border-slate-300 text-black text-[11px] leading-tight" style="max-width: 198mm; box-sizing: border-box;">
+      <div id="print-page" class="bg-white mx-auto border border-slate-300 text-black text-[11px] leading-tight" style="width: 195mm; min-height: 320mm; margin: 0 auto; box-sizing: border-box; background: white;">
         
         <!-- KOP HEADER -->
         <table class="w-full border-collapse border-[2px] border-black mb-1">
           <tr>
             <td class="border border-black text-center p-1.5 w-1/4 align-middle">
               <div class="flex flex-col items-center justify-center">
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAMAAACX4X3RAAAAA1BMVEUAAACnej3aAAAAR0lEQVR4nO3BMQEAAADCIPunNsc3YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AYagAAEaV3gJAAAAAElFTkSuQmCC" alt="LBS" style="height: 46px; width: auto; max-width: 95px; margin: 0 auto 3px auto; display: block; object-fit: contain;" id="print-logo">
+                <img src="logo.png" alt="LBS" style="height: 46px; width: auto; max-width: 95px; margin: 0 auto 3px auto; display: block; object-fit: contain;">
                 <div class="text-[9px] font-bold leading-tight">PT. Lampung Bay Seafood</div>
               </div>
             </td>
@@ -532,16 +532,6 @@
     const APP_PIN = "0112";    // PIN Buka Aplikasi
     const ADMIN_PIN = "2022";  // PIN Khusus Panel Admin
     let isAdminUnlocked = false;
-
-    // LOGO BASE64 MURNI AGAR TIDAK PERNAH HILANG
-    const CORRECT_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAMAAACX4X3RAAAAA1BMVEUAAACnej3aAAAAR0lEQVR4nO3BMQEAAADCIPunNsc3YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AYagAAEaV3gJAAAAAElFTkSuQmCC";
-
-    function applyLogos() {
-      const navLogo = document.querySelector('header img');
-      if (navLogo) navLogo.src = CORRECT_LOGO;
-      const printLogo = document.getElementById('print-logo');
-      if (printLogo) printLogo.src = CORRECT_LOGO;
-    }
 
     const STORAGE_PREFIX = 'QC_GLAZING_LBS_DATA_';
 
@@ -943,7 +933,6 @@
     let activePage = 1;
 
     window.addEventListener('DOMContentLoaded', () => {
-      applyLogos();
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('doc-date').value = today;
       const opDate = document.getElementById('operator-prod-date');
@@ -1169,7 +1158,6 @@
     }
 
     function updatePreviewSheet() {
-      applyLogos();
       activePage = parseInt(document.getElementById('select-print-page').value) || 1;
       const totalPages = Math.max(1, Math.ceil(allBaskets.length / ROWS_PER_PAGE));
       document.getElementById('preview-page-no').innerText = `: ${activePage} dari ${totalPages}`;
@@ -1246,13 +1234,12 @@
 
     function printSinglePage() {
       renderAdminView();
-      applyLogos();
       const tgl = document.getElementById('doc-date').value || 'laporan';
       document.getElementById('preview-prod-date').innerText = formatDateIndo(tgl);
 
       const element = document.getElementById('print-page');
       const opt = {
-        margin:       [4, 6, 4, 6],
+        margin:       [4, 5, 4, 5],
         filename:     `QC_Glazing_Slipper_Lobster_${tgl}.pdf`,
         image:        { type: 'jpeg', quality: 0.99 },
         html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false, windowWidth: 794 },
