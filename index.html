@@ -143,7 +143,7 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Sinkronisasi otomatis real-time dengan Google Spreadsheet</span>
+          <span class="text-[10px] text-slate-400">Data otomatis disinkronkan langsung dengan Google Spreadsheet</span>
         </div>
       </div>
       <div class="w-full sm:w-auto flex items-center gap-2">
@@ -236,7 +236,7 @@
           </div>
 
           <div class="flex items-center justify-between pt-1">
-            <span class="text-[11px] text-slate-400">Otomatis berurutan +1</span>
+            <span class="text-[11px] text-slate-400">Otomatis berurutan +1 dari database</span>
             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg shadow transition flex items-center gap-1">
               <span>+ Simpan Timbang Awal</span>
             </button>
@@ -275,7 +275,7 @@
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-amber-800 mb-1">(2) Timbang Gross (g)*</label>
+              <label class="block font-semibold text-amber-800 mb-1">(3) Timbang Gross (g)*</label>
               <input type="number" step="1" id="in-gross-wt" placeholder="Contoh: 2780" required class="w-full border border-amber-300 bg-amber-50/50 rounded-lg px-2.5 py-1.5 font-bold text-slate-800 text-sm outline-none focus:ring-2 focus:ring-amber-500">
             </div>
             <div>
@@ -548,7 +548,7 @@
       initSignPad('sddc');
       loadSavedSignatures();
 
-      // Tarik data real-time otomatis dari Spreadsheet
+      // Tarik data live real-time dari Google Spreadsheet
       fetchLiveData();
     });
 
@@ -643,7 +643,7 @@
 
     function loadDataFromSheets() {
       fetchLiveData();
-      alert("✅ Data arsip tanggal tersebut berhasil dimuat!");
+      alert("✅ Data arsip berhasil dimuat dari Google Spreadsheet!");
     }
 
     // OTORISASI ADMIN MODAL
