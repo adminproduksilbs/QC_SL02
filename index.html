@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QC Glazing Slipper Lobster - PT. Lampung Bay Seafood</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     @media print {
       @page {
         size: 210mm 330mm;
-        margin: 5mm 8mm;
+        margin: 4mm 6mm;
       }
       body {
         background: white !important;
@@ -27,11 +28,13 @@
       #print-page {
         display: block !important;
         width: 100% !important;
-        height: 100% !important;
+        max-width: 198mm !important;
+        box-sizing: border-box;
         page-break-inside: avoid;
         page-break-after: avoid;
         border: none !important;
         padding: 0 !important;
+        margin: 0 auto !important;
       }
     }
 
@@ -63,7 +66,7 @@
         <input type="password" id="input-pin" inputmode="numeric" maxlength="6" placeholder="••••" 
           class="w-full text-center tracking-[0.4em] text-3xl font-black py-2.5 border-2 border-slate-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-blue-50/20 font-mono transition">
         <p id="pin-error" class="text-rose-600 text-xs font-bold hidden">⚠️ PIN Salah! Coba lagi.</p>
-        <p class="text-[10px] text-slate-400">: <b class="text-slate-600 font-mono"></b></p>
+        <p class="text-[10px] text-slate-400">PIN Masuk: <b class="text-slate-600 font-mono">0112</b></p>
       </div>
 
       <div class="grid grid-cols-2 gap-2 pt-1">
@@ -109,7 +112,7 @@
   <header class="bg-blue-900 text-white shadow-md sticky top-0 z-30 no-print">
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
-        <img id="nav-logo" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAMAAACX4X3RAAAAA1BMVEUAAACnej3aAAAAR0lEQVR4nO3BMQEAAADCIPunNsc3YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AYagAAEaV3gJAAAAAElFTkSuQmCC" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
           <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02</p>
@@ -140,7 +143,7 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">QC dapat mengganti tanggal produksi di sini kapan pun</span>
+          <span class="text-[10px] text-slate-400">Setiap ganti tanggal baru, form timbangan dimulai dari awal (Basket #1)</span>
         </div>
       </div>
       <div class="w-full sm:w-auto">
@@ -339,7 +342,7 @@
       <div class="flex items-center gap-2">
         <button onclick="resetAllData()" class="bg-rose-700 hover:bg-rose-600 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl shadow flex items-center gap-1.5 transition active:scale-95">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-          Reset Hari Baru
+          Reset Data Tanggal Ini
         </button>
         <button onclick="printSinglePage()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 flex items-center gap-2 transition active:scale-95 ring-2 ring-emerald-300">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
@@ -425,19 +428,19 @@
     <div id="print-page-wrapper" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 overflow-x-auto">
       <div class="flex items-center justify-between mb-3 no-print">
         <h3 class="font-bold text-sm text-slate-700 flex items-center gap-1.5">
-          <span>📄 Pratinjau Dokumen Cetak</span>
+          <span>📄 Pratinjau Dokumen Cetak 1 Halaman F4 (Format F-QC-SL-02 Asli - 35 Baris)</span>
         </h3>
         <span class="text-xs text-slate-400">Hasil print preview akan persis 1 lembar seperti di bawah ini</span>
       </div>
 
-      <div id="print-page" class="bg-white mx-auto border border-slate-300 p-3 text-black text-[11px] leading-tight" style="max-width: 840px;">
+      <div id="print-page" class="bg-white mx-auto border border-slate-300 text-black text-[11px] leading-tight" style="max-width: 198mm; box-sizing: border-box;">
         
         <!-- KOP HEADER -->
         <table class="w-full border-collapse border-[2px] border-black mb-1">
           <tr>
             <td class="border border-black text-center p-1.5 w-1/4 align-middle">
               <div class="flex flex-col items-center justify-center">
-                <img id="kop-logo" alt="LBS" style="height: 46px; width: auto; max-width: 95px; margin: 0 auto 3px auto; display: block; object-fit: contain;">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAMAAACX4X3RAAAAA1BMVEUAAACnej3aAAAAR0lEQVR4nO3BMQEAAADCIPunNsc3YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AYagAAEaV3gJAAAAAElFTkSuQmCC" alt="LBS" style="height: 46px; width: auto; max-width: 95px; margin: 0 auto 3px auto; display: block; object-fit: contain;" id="print-logo">
                 <div class="text-[9px] font-bold leading-tight">PT. Lampung Bay Seafood</div>
               </div>
             </td>
@@ -530,11 +533,100 @@
     const ADMIN_PIN = "2022";  // PIN Khusus Panel Admin
     let isAdminUnlocked = false;
 
-    // SINKRONISASI TANGGAL DARI HALAMAN OPERATOR
+    // LOGO BASE64 MURNI AGAR TIDAK PERNAH HILANG
+    const CORRECT_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAMAAACX4X3RAAAAA1BMVEUAAACnej3aAAAAR0lEQVR4nO3BMQEAAADCIPunNsc3YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AYagAAEaV3gJAAAAAElFTkSuQmCC";
+
+    function applyLogos() {
+      const navLogo = document.querySelector('header img');
+      if (navLogo) navLogo.src = CORRECT_LOGO;
+      const printLogo = document.getElementById('print-logo');
+      if (printLogo) printLogo.src = CORRECT_LOGO;
+    }
+
+    const STORAGE_PREFIX = 'QC_GLAZING_LBS_DATA_';
+
+    function getStorageKeyForDate(dateStr) {
+      return STORAGE_PREFIX + (dateStr || document.getElementById('doc-date').value || 'DEFAULT');
+    }
+
+    function createEmptyBaskets() {
+      const list = [];
+      for (let i = 1; i <= ROWS_PER_PAGE; i++) {
+        list.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
+      }
+      return list;
+    }
+
+    // SINKRONISASI TANGGAL & RESET/MUAT DATA SESUAI TANGGAL TERSEBUT
+    function onDateChanged(newDate) {
+      if (!newDate) return;
+      document.getElementById('doc-date').value = newDate;
+      const opDate = document.getElementById('operator-prod-date');
+      if (opDate) opDate.value = newDate;
+      document.getElementById('preview-prod-date').innerText = formatDateIndo(newDate);
+
+      // Muat data khusus untuk tanggal yang dipilih
+      const loaded = loadDateData(newDate);
+      if (!loaded) {
+        // Tanggal baru: mulai dari awal (No Basket #1, data kosong)
+        allBaskets = createEmptyBaskets();
+        saveToStorage();
+      }
+
+      refreshNextAwalNo();
+      refreshGrossDropdown();
+      updatePageSelector();
+      updatePreviewSheet();
+    }
+
     function syncOperatorDate(val) {
-      document.getElementById('doc-date').value = val;
-      document.getElementById('preview-prod-date').innerText = formatDateIndo(val);
-      saveToStorage();
+      onDateChanged(val);
+    }
+
+    function saveToStorage() {
+      const curDate = document.getElementById('doc-date').value;
+      const key = getStorageKeyForDate(curDate);
+      const payload = {
+        docDate: curDate,
+        baskets: allBaskets
+      };
+      localStorage.setItem(key, JSON.stringify(payload));
+      localStorage.setItem('QC_LAST_ACTIVE_DATE', curDate);
+    }
+
+    function loadDateData(dateStr) {
+      const key = getStorageKeyForDate(dateStr);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.baskets && parsed.baskets.length > 0) {
+            allBaskets = parsed.baskets;
+            return true;
+          }
+        } catch(e) {
+          console.error("Gagal load storage untuk tanggal " + dateStr, e);
+        }
+      }
+      return false;
+    }
+
+    function loadFromStorage() {
+      const today = document.getElementById('doc-date').value;
+      return loadDateData(today);
+    }
+
+    function resetAllData() {
+      const curDate = document.getElementById('doc-date').value;
+      if (confirm(`⚠️ Kosongkan form timbangan untuk tanggal ${formatDateIndo(curDate)} dan mulai dari awal (Basket #1)?\n\nCatatan: Tanda tangan digital tetap disimpan.`)) {
+        localStorage.removeItem(getStorageKeyForDate(curDate));
+        allBaskets = createEmptyBaskets();
+        saveToStorage();
+        refreshNextAwalNo();
+        refreshGrossDropdown();
+        updatePageSelector();
+        updatePreviewSheet();
+      }
     }
 
     // OTORISASI ADMIN MODAL
@@ -742,47 +834,6 @@
       localStorage.removeItem('SIG_' + id.toUpperCase());
     }
 
-    // STORAGE & SINKRONISASI
-    const STORAGE_KEY = 'QC_GLAZING_LBS_DATA';
-
-    function saveToStorage() {
-      const payload = {
-        docDate: document.getElementById('doc-date').value,
-        baskets: allBaskets
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    }
-
-    function loadFromStorage() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed.docDate) {
-            document.getElementById('doc-date').value = parsed.docDate;
-            const opDate = document.getElementById('operator-prod-date');
-            if (opDate) opDate.value = parsed.docDate;
-            document.getElementById('preview-prod-date').innerText = formatDateIndo(parsed.docDate);
-          }
-          if (parsed.baskets && parsed.baskets.length > 0) {
-            allBaskets = parsed.baskets;
-            return true;
-          }
-        } catch(e) {
-          console.error("Gagal load storage", e);
-        }
-      }
-      return false;
-    }
-
-    function resetAllData() {
-      if (confirm("⚠️ Apakah Anda yakin ingin mengosongkan form untuk memulai hari/shift baru?\n\nPastikan laporan hari ini sudah dicetak PDF!")) {
-        localStorage.removeItem(STORAGE_KEY);
-        // TTD dibiarkan tersimpan untuk hari-hari berikutnya
-        location.reload();
-      }
-    }
-
     // SPREADSHEET URL
     let SCRIPT_URL = localStorage.getItem('QC_SCRIPT_URL') || '';
 
@@ -892,6 +943,7 @@
     let activePage = 1;
 
     window.addEventListener('DOMContentLoaded', () => {
+      applyLogos();
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('doc-date').value = today;
       const opDate = document.getElementById('operator-prod-date');
@@ -902,17 +954,10 @@
       const curTime = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
       document.getElementById('in-awal-time').value = curTime;
 
-      const hasSaved = loadFromStorage();
+      const hasSaved = loadDateData(today);
       if (!hasSaved) {
-        allBaskets = [
-          { no: 1, time: '08:10', temp: '0.', prod: 'Slipper Lobster', initWt: 2280, deglazeWt: 2280, grossWt: 2780, remarks: '' },
-          { no: 2, time: '08:10', temp: '0.', prod: 'Slipper Lobster', initWt: 2280, deglazeWt: 2280, grossWt: 2668, remarks: '' },
-          { no: 3, time: '08:10', temp: '0.', prod: 'Slipper Lobster', initWt: 2281, deglazeWt: 2281, grossWt: 2664, remarks: '' },
-          { no: 4, time: '08:10', temp: '0.', prod: 'Slipper Lobster', initWt: 2280, deglazeWt: 2280, grossWt: 2625, remarks: '' }
-        ];
-        for (let i = 5; i <= 35; i++) {
-          allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
-        }
+        allBaskets = createEmptyBaskets();
+        saveToStorage();
       }
 
       setupEvents();
@@ -929,11 +974,8 @@
     });
 
     function setupEvents() {
-      document.getElementById('doc-date').addEventListener('input', (e) => {
-        const opDate = document.getElementById('operator-prod-date');
-        if (opDate) opDate.value = e.target.value;
-        document.getElementById('preview-prod-date').innerText = formatDateIndo(e.target.value);
-        saveToStorage();
+      document.getElementById('doc-date').addEventListener('change', (e) => {
+        onDateChanged(e.target.value);
       });
 
       const adminPinInput = document.getElementById('input-admin-pin');
@@ -1127,6 +1169,7 @@
     }
 
     function updatePreviewSheet() {
+      applyLogos();
       activePage = parseInt(document.getElementById('select-print-page').value) || 1;
       const totalPages = Math.max(1, Math.ceil(allBaskets.length / ROWS_PER_PAGE));
       document.getElementById('preview-page-no').innerText = `: ${activePage} dari ${totalPages}`;
@@ -1155,7 +1198,6 @@
         tbody.appendChild(tr);
       }
 
-      // Update ringkasan KPI & Log Operator
       const filled = allBaskets.filter(b => b.initWt !== '');
       const done = allBaskets.filter(b => b.grossWt && b.grossWt !== '');
       document.getElementById('stat-total-input').innerText = filled.length;
@@ -1176,7 +1218,7 @@
       recentTbody.innerHTML = '';
       const recentDone = [...filled].reverse().slice(0, 10);
       if (recentDone.length === 0) {
-        recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan. Silakan input timbang awal di atas.</td></tr>`;
+        recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal ini. Silakan input timbang awal di atas.</td></tr>`;
       } else {
         recentDone.forEach(b => {
           let glazePctText = '-';
@@ -1204,10 +1246,35 @@
 
     function printSinglePage() {
       renderAdminView();
-      document.getElementById('preview-prod-date').innerText = formatDateIndo(document.getElementById('doc-date').value);
-      setTimeout(() => {
+      applyLogos();
+      const tgl = document.getElementById('doc-date').value || 'laporan';
+      document.getElementById('preview-prod-date').innerText = formatDateIndo(tgl);
+
+      const element = document.getElementById('print-page');
+      const opt = {
+        margin:       [4, 6, 4, 6],
+        filename:     `QC_Glazing_Slipper_Lobster_${tgl}.pdf`,
+        image:        { type: 'jpeg', quality: 0.99 },
+        html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false, windowWidth: 794 },
+        jsPDF:        { unit: 'mm', format: [210, 330], orientation: 'portrait' },
+        pagebreak:    { mode: ['avoid-all', 'css'] }
+      };
+
+      const btn = event.target;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = "⏳ Menyiapkan PDF...";
+      btn.disabled = true;
+
+      html2pdf().from(element).set(opt).save().then(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }).catch(err => {
+        console.error(err);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert("Gagal mendownload PDF. Mencoba cetak standar...");
         window.print();
-      }, 100);
+      });
     }
   </script>
 </body>
