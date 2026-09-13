@@ -548,7 +548,7 @@
       initSignPad('sddc');
       loadSavedSignatures();
 
-      // Tarik data live real-time dari Google Spreadsheet
+      // Tarik data real-time otomatis dari Spreadsheet
       fetchLiveData();
     });
 
@@ -594,7 +594,10 @@
       const curDate = document.getElementById('operator-prod-date').value || document.getElementById('doc-date').value;
       if (!SCRIPT_URL) return;
 
-      fetch(SCRIPT_URL + "?tanggal=" + encodeURIComponent(curDate))
+      fetch(SCRIPT_URL + "?tanggal=" + encodeURIComponent(curDate), {
+        method: 'GET',
+        mode: 'cors'
+      })
         .then(res => res.json())
         .then(data => {
           allBaskets = [];
