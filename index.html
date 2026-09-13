@@ -215,7 +215,7 @@
               </div>
             </div>
             <div>
-              <label class="block font-semibold text-slate-600 mb-1">Waktu</label>
+              <label class="block font-semibold text-slate-600 mb-1">Waktu (WIB)</label>
               <input type="time" id="in-awal-time" class="w-full border rounded-lg px-2 py-1.5 outline-none focus:ring-2 focus:ring-blue-400">
             </div>
             <div>
@@ -490,16 +490,16 @@
               <img id="img-sig-qc" class="max-h-8 max-w-[100px] object-contain hidden" alt="TTD QC">
             </div>
             <b>Quality Control Date,</b><br>
-            <i class="text-[7px]">Quality Control Tgl</i>
+            <i class="text-[7px]">Tgl : <span id="sig-full-qc" class="font-mono font-bold">--/--/----</span></i>
           </div>
           <div>
             <u><b>Checked by,</b></u><br>
-            <i class="text-[7px]">Diperiksa Oleh,</i>
+            <i class="text-[7px]">Diketahui oleh,</i>
             <div class="h-9 flex items-center justify-center">
               <img id="img-sig-kabag" class="max-h-8 max-w-[100px] object-contain hidden" alt="TTD Kabag">
             </div>
-            <b>Production Kabag. Date,</b><br>
-            <i class="text-[7px]">Kabag Produksi. Tgl</i>
+            <b>Production Kabag Date,</b><br>
+            <i class="text-[7px]">Tgl : <span id="sig-full-kabag" class="font-mono font-bold">--/--/----</span></i>
           </div>
           <div>
             <u><b>Approved by,</b></u><br>
@@ -508,7 +508,7 @@
               <img id="img-sig-sddc" class="max-h-8 max-w-[100px] object-contain hidden" alt="TTD SDDC">
             </div>
             <b>SDDC Date,</b><br>
-            <i class="text-[7px]">SDDC Tgl</i>
+            <i class="text-[7px]">Tgl : <span id="sig-full-sddc" class="font-mono font-bold">--/--/----</span></i>
           </div>
         </div>
 
@@ -535,10 +535,14 @@
       document.getElementById('doc-date').value = today;
       const opDate = document.getElementById('operator-prod-date');
       if (opDate) opDate.value = today;
-      document.getElementById('preview-prod-date').innerText = formatDateIndo(today);
+      
+      // Sinkronisasi format tanggal ke preview dan tanda tangan
+      onDateChanged(today);
 
+      // Waktu otomatis Jam WIB (UTC+7)
       const now = new Date();
-      const curTime = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      const wibTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (7 * 3600000));
+      const curTime = String(wibTime.getHours()).padStart(2, '0') + ':' + String(wibTime.getMinutes()).padStart(2, '0');
       document.getElementById('in-awal-time').value = curTime;
 
       checkAuthSession();
@@ -551,7 +555,7 @@
       // Tarik data real-time otomatis dari Spreadsheet
       fetchLiveData();
 
-      // FITUR AUTO-REFRESH: Tarik data otomatis setiap 10 detik di latar belakang
+      // FITUR AUTO-REFRESH: Tarik data otomatis setiap 3 detik di latar belakang
       setInterval(() => {
         fetchLiveData();
       }, 3000);
@@ -587,7 +591,23 @@
       document.getElementById('doc-date').value = newDate;
       const opDate = document.getElementById('operator-prod-date');
       if (opDate) opDate.value = newDate;
+      
       document.getElementById('preview-prod-date').innerText = formatDateIndo(newDate);
+      
+      // Update tanggal tanda tangan dengan format garis miring (DD/MM/YYYY)
+      const parts = newDate.split('-');
+      if (parts.length === 3) {
+        const thn = parts[0];
+        const bln = parts[1];
+        const tgl = parts[2];
+        const formatTgl = `${tgl}/${bln}/${thn}`;
+
+        ['qc', 'kabag', 'sddc'].forEach(role => {
+          const el = document.getElementById(`sig-full-${role}`);
+          if (el) el.innerText = formatTgl;
+        });
+      }
+
       fetchLiveData();
     }
 
