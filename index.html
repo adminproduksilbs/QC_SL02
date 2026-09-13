@@ -524,8 +524,8 @@
     const ADMIN_PIN = "2022";  // PIN Khusus Panel Admin
     let isAdminUnlocked = false;
 
-    // URL SPREADSHEET TERBARU YANG AKTIF
-    let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym9gYfv8339EYrevrRUvIWY6kANogpEJPzm1J_t66bLXLuLobmrsmUIvosj8hFOxhZ/exec";
+    // URL SPREADSHEET TERBARU
+    let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzH_dRJkS9GHjphkDjqF0_-WrnMh8VQEd9jUKH7UpVyDb-SsiYXNEmdR4_SW4d3Q13X/exec";
 
     let allBaskets = [];
     let activePage = 1;
@@ -917,7 +917,7 @@
       pending.forEach(b => {
         const opt = document.createElement('option');
         opt.value = b.no;
-        opt.innerText = `Basket #${b.no} (Awal: ${b.initWt}g - Jam ${b.time})`;
+        opt.innerText = `Basket #${b.no} (Awal: ${b.initWt}g - Jam ${formatTime(b.time)})`;
         sel.appendChild(opt);
       });
 
@@ -1032,6 +1032,17 @@
       return dateStr;
     }
 
+    function formatTime(val) {
+      if (!val) return '';
+      if (val.includes('1899') || val.includes('T')) {
+        const d = new Date(val);
+        if (!isNaN(d.getTime())) {
+          return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        }
+      }
+      return val;
+    }
+
     function formatKg(val) {
       if (!val || isNaN(val) || val === '') return '';
       let num = parseFloat(val);
@@ -1061,7 +1072,7 @@
 
         tr.innerHTML = `
           <td style="font-weight: bold;">${item.no}</td>
-          <td>${item.time || ''}</td>
+          <td>${formatTime(item.time) || ''}</td>
           <td>${item.temp || ''}</td>
           <td style="text-align: left; padding-left: 4px;">${item.prod || ''}</td>
           <td style="font-weight: bold;">${formatKg(item.initWt)}</td>
@@ -1111,7 +1122,7 @@
             row.className = "hover:bg-slate-50 transition";
             row.innerHTML = `
               <td class="py-2 px-3 font-bold text-blue-900">#${b.no}</td>
-              <td class="py-2 px-3 text-slate-600">${b.time || '-'}</td>
+              <td class="py-2 px-3 text-slate-600">${formatTime(b.time) || '-'}</td>
               <td class="py-2 px-3 text-slate-600">${b.temp || '-'}°C</td>
               <td class="py-2 px-3 text-slate-700">${b.prod || '-'}</td>
               <td class="py-2 px-3 text-center font-bold">${formatKg(b.initWt)} kg</td>
