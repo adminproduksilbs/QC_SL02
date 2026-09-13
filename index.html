@@ -112,7 +112,7 @@
   <header class="bg-blue-900 text-white shadow-md sticky top-0 z-30 no-print">
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
-        <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain">
+        <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain" onerror="this.style.display='none'">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
           <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02</p>
@@ -431,7 +431,7 @@
           <tr>
             <td class="border border-black text-center p-1.5 w-1/4 align-middle">
               <div class="flex flex-col items-center justify-center">
-                <img src="logo.png" alt="LBS" style="height: 40px; width: auto; max-width: 90px; margin: 0 auto 2px auto; display: block; object-fit: contain;">
+                <img src="logo.png" alt="LBS" style="height: 40px; width: auto; max-width: 90px; margin: 0 auto 2px auto; display: block; object-fit: contain;" onerror="this.style.display='none'">
                 <div class="text-[9px] font-bold leading-tight">PT. Lampung Bay Seafood</div>
               </div>
             </td>
@@ -621,9 +621,9 @@
                 time: item.time || '',
                 temp: item.temp || '',
                 prod: item.prod || 'Slipper Lobster',
-                initWt: item.initWt || '',
-                deglazeWt: item.initWt || '',
-                grossWt: item.grossWt || '',
+                initWt: item.initWt !== "" ? parseFloat(item.initWt) : '',
+                deglazeWt: item.deglazeWt !== "" ? parseFloat(item.deglazeWt) : (item.initWt !== "" ? parseFloat(item.initWt) : ''),
+                grossWt: item.grossWt !== "" ? parseFloat(item.grossWt) : '',
                 remarks: item.remarks || ''
               });
             });
