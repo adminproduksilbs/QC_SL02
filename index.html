@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QC Glazing Slipper Lobster - PT. Lampung Bay Seafood</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Pustaka html2pdf & jspdf untuk cetak PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <!-- Pustaka SheetJS (xlsx) untuk Download Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -18,7 +16,7 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 0mm;
+        margin: 5mm;
       }
       body {
         background: white !important;
@@ -32,14 +30,16 @@
       #print-page-wrapper {
         display: block !important;
         width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
       }
       #print-page {
         display: block !important;
-        width: 195mm !important;
-        min-height: 287mm !important;
+        width: 100% !important;
+        max-width: 195mm !important;
         box-sizing: border-box;
-        page-break-inside: avoid;
-        page-break-after: avoid;
         border: none !important;
         padding: 0 !important;
         margin: 0 auto !important;
@@ -357,7 +357,7 @@
           📊 Download Excel (.xlsx)
         </button>
         <button onclick="printSinglePage()" class="bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-blue-900/20 flex items-center gap-2 transition active:scale-95">
-          🖨️ Cetak PDF A4
+          🖨️ Cetak / Simpan PDF A4
         </button>
       </div>
     </div>
@@ -1163,39 +1163,20 @@
       XLSX.writeFile(workbook, `QC_Glazing_Slipper_Lobster_${curTgl}.xlsx`);
     }
 
+    // MENGGUNAKAN METODE CETAK/SAVE PDF NATIVE BROWSER (DIJAMIN LANGSUNG JALAN & PAS 1 HALAMAN)
     function printSinglePage() {
       const tgl = document.getElementById('doc-date').value || 'laporan';
       document.getElementById('preview-prod-date').innerText = formatDateIndo(tgl);
+      
+      // Ubah judul dokumen sementara agar nama file PDF otomatis sesuai tanggal saat di-save sebagai PDF
+      const oldTitle = document.title;
+      document.title = `QC_Glazing_Slipper_Lobster_${tgl}`;
+      
+      window.print();
 
-      const element = document.getElementById('print-page');
-      const opt = {
-        margin:       0,
-        filename:     `QC_Glazing_Slipper_Lobster_${tgl}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false, width: 794 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      const btn = event.target;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = "⏳ Menyiapkan PDF...";
-      btn.disabled = true;
-
-      html2canvas(element, opt.html2canvas).then((canvas) => {
-        const imgData = canvas.toDataURL('image/jpeg', 0.98);
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        pdf.addImage(imgData, 'JPEG', 0, 0, 195, 287);
-        pdf.save(`QC_Glazing_Slipper_Lobster_${tgl}.pdf`);
-
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      }).catch(err => {
-        console.error(err);
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        alert("Gagal mendownload PDF.");
-      });
+      setTimeout(() => {
+        document.title = oldTitle;
+      }, 1000);
     }
   </script>
 </body>
