@@ -10,7 +10,7 @@
   <!-- Pustaka SheetJS (xlsx) untuk Download Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <!-- Firebase SDK (Compat Version agar mudah langsung di HTML) -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -74,7 +74,7 @@
         <input type="password" id="input-pin" inputmode="numeric" maxlength="6" placeholder="••••" 
           class="w-full text-center tracking-[0.4em] text-3xl font-black py-2.5 border-2 border-slate-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-blue-50/20 font-mono transition">
         <p id="pin-error" class="text-rose-600 text-xs font-bold hidden">⚠️ PIN Salah! Coba lagi.</p>
-        <p class="text-[10px] text-slate-400">PIN Masuk: <b class="text-slate-600 font-mono">0112</b></p>
+        <p class="text-[10px] text-slate-400"> <b class="text-slate-600 font-mono"></b></p>
       </div>
 
       <div class="grid grid-cols-2 gap-2 pt-1">
@@ -123,7 +123,7 @@
         <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain" onerror="this.style.display='none'">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
-          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02 (Firebase Cloud)</p>
+          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood</p>
         </div>
       </div>
       
@@ -239,7 +239,11 @@
             </div>
             <div>
               <label class="block font-semibold text-blue-700 mb-1">(1) Timbang Awal (g)*</label>
-              <input type="number" step="1" id="in-awal-wt" placeholder="Contoh: 2280" required class="w-full border border-blue-300 bg-blue-50/50 rounded-lg px-2.5 py-1.5 font-bold text-slate-800 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+              <div class="flex items-center border border-blue-300 bg-blue-50/50 rounded-lg overflow-hidden px-2.5 py-1.5">
+                <span class="font-bold text-slate-700 text-sm select-none pr-1">22</span>
+                <input type="number" id="in-awal-wt" placeholder="80" maxlength="2" min="0" max="99" required class="w-full bg-transparent font-bold text-slate-800 text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                <span class="text-[10px] text-slate-400 pl-1">g</span>
+              </div>
             </div>
           </div>
 
@@ -268,7 +272,7 @@
         <form id="form-timbang-gross" onsubmit="handleTimbangGross(event)" class="space-y-3 text-xs">
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-slate-600 mb-1">Pilih Basket Antrean (Urut Terendah)</label>
+              <label class="block font-semibold text-slate-600 mb-1">Pilih Basket Antrean</label>
               <select id="in-gross-no" onchange="syncGrossAwalWt()" class="w-full border border-amber-300 bg-amber-50/40 rounded-lg px-2.5 py-2 font-bold text-slate-800 outline-none focus:ring-2 focus:ring-amber-500">
                 <option value="">-- Pilih Keranjang --</option>
               </select>
@@ -306,7 +310,7 @@
     <!-- LOG 10 BASKET TERAKHIR -->
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Real-time Firebase)</h3>
+        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir</h3>
         <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 40 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
@@ -364,7 +368,7 @@
         <span class="text-xl">🔥</span>
         <div>
           <span class="font-bold text-emerald-900">Database Status:</span>
-          <span class="text-emerald-700 ml-1">Terhubung ke Firebase Realtime Database (Real-time Cloud Sync).</span>
+          <span class="text-emerald-700 ml-1">Terhubung ke Database (Real-time Cloud Sync).</span>
         </div>
       </div>
     </div>
@@ -527,9 +531,8 @@
 
   </section>
 
-  <!-- JAVASCRIPT LENGKAP DENGAN FIREBASE & DOWNLOAD EXCEL/PDF -->
+  <!-- JAVASCRIPT LENGKAP -->
   <script>
-    // Inisialisasi Firebase Realtime Database
     const firebaseConfig = {
       apiKey: "AIzaSyAgB4ecqIu0EpRDFnPY-VgrcZ53k2xKkJw",
       authDomain: "qc-glazing.firebaseapp.com",
@@ -560,7 +563,6 @@
       
       onDateChanged(today);
 
-      // Waktu otomatis Jam WIB (UTC+7)
       const now = new Date();
       const wibTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (7 * 3600000));
       const curTime = String(wibTime.getHours()).padStart(2, '0') + ':' + String(wibTime.getMinutes()).padStart(2, '0');
@@ -573,7 +575,6 @@
       initSignPad('sddc');
       loadSavedSignatures();
 
-      // Mendengarkan perubahan data secara real-time dari Firebase Cloud
       listenFirebaseData();
     });
 
@@ -635,10 +636,9 @@
       alert("✅ Data berhasil disinkronkan dari Firebase Cloud!");
     }
 
-    // FUNGSI REAL-TIME LISTENER FIREBASE
     function listenFirebaseData() {
       const curDate = document.getElementById('operator-prod-date').value || document.getElementById('doc-date').value;
-      const cleanDate = curDate.replace(/-/g, '_'); // Format key tanggal untuk Firebase (YYYY_MM_DD)
+      const cleanDate = curDate.replace(/-/g, '_');
       
       const ref = db.ref('qc_glazing/' + cleanDate);
       ref.on('value', (snapshot) => {
@@ -646,7 +646,6 @@
         allBaskets = [];
 
         if (rawData) {
-          // Konversi object Firebase ke array
           const keys = Object.keys(rawData).sort((a, b) => parseInt(a) - parseInt(b));
           keys.forEach(k => {
             const item = rawData[k];
@@ -695,7 +694,6 @@
         });
     }
 
-    // OTORISASI ADMIN MODAL
     function openAdminPinModal() {
       const modal = document.getElementById('admin-pin-overlay');
       const input = document.getElementById('input-admin-pin');
@@ -960,11 +958,13 @@
       const time = document.getElementById('in-awal-time').value || '08:00';
       const temp = document.getElementById('in-awal-temp').value || '0.';
       const prod = document.getElementById('in-awal-prod').value || 'Slipper Lobster';
-      const initWt = parseFloat(document.getElementById('in-awal-wt').value);
+      
+      // Menggabungkan awalan "22" dengan ketikan 2 digit belakang operator
+      const inputVal = document.getElementById('in-awal-wt').value.trim();
+      const initWt = parseFloat("22" + inputVal);
 
       document.getElementById('in-awal-wt').value = '';
 
-      // Cari data lama jika sudah ada (misal update gross) agar tidak terhapus
       const existing = allBaskets.find(b => b.no === no) || {};
 
       saveToFirebase(no, {
@@ -1137,7 +1137,6 @@
       }
     }
 
-    // FITUR DOWNLOAD EXCEL (.xlsx)
     function downloadExcel() {
       const curTgl = document.getElementById('doc-date').value || 'laporan';
       const validData = allBaskets.filter(b => b.initWt !== '');
