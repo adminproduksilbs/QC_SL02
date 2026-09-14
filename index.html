@@ -5,7 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QC Glazing Slipper Lobster - PT. Lampung Bay Seafood</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Pustaka html2pdf untuk cetak PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- Pustaka SheetJS (xlsx) untuk Download Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Firebase SDK (Compat Version agar mudah langsung di HTML) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <style>
     @media print {
       @page {
@@ -66,7 +74,7 @@
         <input type="password" id="input-pin" inputmode="numeric" maxlength="6" placeholder="••••" 
           class="w-full text-center tracking-[0.4em] text-3xl font-black py-2.5 border-2 border-slate-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-blue-50/20 font-mono transition">
         <p id="pin-error" class="text-rose-600 text-xs font-bold hidden">⚠️ PIN Salah! Coba lagi.</p>
-        <p class="text-[10px] text-slate-400"> <b class="text-slate-600 font-mono"></b></p>
+        <p class="text-[10px] text-slate-400">PIN Masuk: <b class="text-slate-600 font-mono">0112</b></p>
       </div>
 
       <div class="grid grid-cols-2 gap-2 pt-1">
@@ -115,7 +123,7 @@
         <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain" onerror="this.style.display='none'">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
-          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02</p>
+          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02 (Firebase Cloud)</p>
         </div>
       </div>
       
@@ -143,12 +151,12 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Sinkronisasi langsung dengan Google Spreadsheet</span>
+          <span class="text-[10px] text-slate-400">Sinkronisasi Real-time via Firebase Cloud</span>
         </div>
       </div>
       <div class="w-full sm:w-auto flex items-center gap-2">
         <input type="date" id="operator-prod-date" onchange="syncOperatorDate(this.value)" class="w-full sm:w-48 border-2 border-blue-300 bg-blue-50/50 rounded-xl px-3 py-2 font-bold text-blue-900 text-sm outline-none focus:ring-2 focus:ring-blue-500">
-        <button type="button" onclick="manualRefreshData()" class="bg-blue-900 text-white px-3.5 py-2 rounded-xl font-bold text-xs shadow hover:bg-blue-800 transition active:scale-95 whitespace-nowrap flex items-center gap-1">🔄 Refresh & Tarik Data</button>
+        <button type="button" onclick="manualRefreshData()" class="bg-blue-900 text-white px-3.5 py-2 rounded-xl font-bold text-xs shadow hover:bg-blue-800 transition active:scale-95 whitespace-nowrap flex items-center gap-1">🔄 Refresh Data</button>
       </div>
     </div>
 
@@ -298,7 +306,7 @@
     <!-- LOG 10 BASKET TERAKHIR -->
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Real-time Database)</h3>
+        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Real-time Firebase)</h3>
         <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 40 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
@@ -317,7 +325,7 @@
             </tr>
           </thead>
           <tbody id="operator-recent-tbody" class="divide-y divide-slate-100 font-mono">
-            <!-- Diisi live oleh Spreadsheet -->
+            <!-- Diisi live oleh Firebase -->
           </tbody>
         </table>
       </div>
@@ -337,24 +345,26 @@
           <span>🛠️ Panel Admin QC</span>
           <span class="text-xs font-semibold px-2.5 py-0.5 bg-amber-100 text-amber-900 rounded-full">PIN: 2022 Terverifikasi</span>
         </h2>
-        <p class="text-xs text-slate-400">Pengaturan dokumen, tanda tangan digital, penarikan arsip, dan cetak PDF A4 1 halaman.</p>
+        <p class="text-xs text-slate-400">Pengaturan dokumen, tanda tangan digital, download Excel/PDF, dan arsip harian.</p>
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="printSinglePage()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 flex items-center gap-2 transition active:scale-95 ring-2 ring-emerald-300">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-          Cetak 1 Halaman PDF
+        <button onclick="downloadExcel()" class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold px-3.5 py-2.5 rounded-xl shadow-lg shadow-emerald-700/20 flex items-center gap-1.5 transition active:scale-95">
+          📊 Download Excel (.xlsx)
+        </button>
+        <button onclick="printSinglePage()" class="bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-blue-900/20 flex items-center gap-2 transition active:scale-95">
+          🖨️ Cetak PDF A4
         </button>
       </div>
     </div>
 
-    <!-- 1. KONEKSI GOOGLE SHEETS -->
+    <!-- 1. KONEKSI FIREBASE CLOUD -->
     <div class="bg-emerald-50 border border-emerald-300 rounded-2xl p-3.5 text-xs flex flex-wrap items-center justify-between gap-2 shadow-sm">
       <div class="flex items-center gap-2">
-        <span class="text-xl">📊</span>
+        <span class="text-xl">🔥</span>
         <div>
           <span class="font-bold text-emerald-900">Database Status:</span>
-          <span class="text-emerald-700 ml-1">Terhubung langsung ke Google Spreadsheet secara online (Multi-user).</span>
+          <span class="text-emerald-700 ml-1">Terhubung ke Firebase Realtime Database (Real-time Cloud Sync).</span>
         </div>
       </div>
     </div>
@@ -366,11 +376,11 @@
           <label class="block font-semibold text-slate-600 mb-1">Production Date</label>
           <div class="flex gap-1.5">
             <input type="date" id="doc-date" class="w-full border rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-blue-500 outline-none">
-            <button type="button" onclick="loadDataFromSheets()" class="bg-blue-800 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs whitespace-nowrap shadow flex items-center gap-1 transition active:scale-95">
+            <button type="button" onclick="loadDataFromFirebase()" class="bg-blue-800 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-bold text-xs whitespace-nowrap shadow flex items-center gap-1 transition active:scale-95">
               📥 Muat Arsip / Cetak
             </button>
           </div>
-          <span class="text-[10px] text-slate-400">Pilih tanggal untuk menarik data lama langsung dari Spreadsheet</span>
+          <span class="text-[10px] text-slate-400">Pilih tanggal untuk menarik data arsip langsung dari Firebase</span>
         </div>
 
         <div class="bg-blue-50/80 p-3 rounded-xl border border-blue-200 flex flex-col justify-center">
@@ -517,15 +527,27 @@
 
   </section>
 
-  <!-- JAVASCRIPT LENGKAP -->
+  <!-- JAVASCRIPT LENGKAP DENGAN FIREBASE & DOWNLOAD EXCEL/PDF -->
   <script>
-    const ROWS_PER_PAGE = 40;
-    const APP_PIN = "0112";    // PIN Buka Aplikasi
-    const ADMIN_PIN = "2022";  // PIN Khusus Panel Admin
-    let isAdminUnlocked = false;
+    // Inisialisasi Firebase Realtime Database
+    const firebaseConfig = {
+      apiKey: "AIzaSyAgB4ecqIu0EpRDFnPY-VgrcZ53k2xKkJw",
+      authDomain: "qc-glazing.firebaseapp.com",
+      databaseURL: "https://qc-glazing-default-rtdb.firebaseio.com",
+      projectId: "qc-glazing",
+      storageBucket: "qc-glazing.firebasestorage.app",
+      messagingSenderId: "1041292027817",
+      appId: "1:1041292027817:web:642b193b6b0cacfb3686b8",
+      measurementId: "G-B4QG53X4TH"
+    };
 
-    // URL SPREADSHEET TERBARU
-    let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzH_dRJkS9GHjphkDjqF0_-WrnMh8VQEd9jUKH7UpVyDb-SsiYXNEmdR4_SW4d3Q13X/exec";
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const ROWS_PER_PAGE = 40;
+    const APP_PIN = "0112";    
+    const ADMIN_PIN = "2022";  
+    let isAdminUnlocked = false;
 
     let allBaskets = [];
     let activePage = 1;
@@ -536,7 +558,6 @@
       const opDate = document.getElementById('operator-prod-date');
       if (opDate) opDate.value = today;
       
-      // Sinkronisasi format tanggal ke preview dan tanda tangan
       onDateChanged(today);
 
       // Waktu otomatis Jam WIB (UTC+7)
@@ -552,13 +573,8 @@
       initSignPad('sddc');
       loadSavedSignatures();
 
-      // Tarik data real-time otomatis dari Spreadsheet
-      fetchLiveData();
-
-      // FITUR AUTO-REFRESH: Tarik data otomatis setiap 3 detik di latar belakang
-      setInterval(() => {
-        fetchLiveData();
-      }, 3000);
+      // Mendengarkan perubahan data secara real-time dari Firebase Cloud
+      listenFirebaseData();
     });
 
     function setupEvents() {
@@ -594,7 +610,6 @@
       
       document.getElementById('preview-prod-date').innerText = formatDateIndo(newDate);
       
-      // Update tanggal tanda tangan dengan format garis miring (DD/MM/YYYY)
       const parts = newDate.split('-');
       if (parts.length === 3) {
         const thn = parts[0];
@@ -608,7 +623,7 @@
         });
       }
 
-      fetchLiveData();
+      listenFirebaseData();
     }
 
     function syncOperatorDate(val) {
@@ -616,78 +631,68 @@
     }
 
     function manualRefreshData() {
-      const btn = event.target;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = "⏳ Menarik Data...";
-      btn.disabled = true;
+      listenFirebaseData();
+      alert("✅ Data berhasil disinkronkan dari Firebase Cloud!");
+    }
 
-      fetchLiveData(() => {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        alert("✅ Data berhasil diperbarui dari Google Spreadsheet!");
+    // FUNGSI REAL-TIME LISTENER FIREBASE
+    function listenFirebaseData() {
+      const curDate = document.getElementById('operator-prod-date').value || document.getElementById('doc-date').value;
+      const cleanDate = curDate.replace(/-/g, '_'); // Format key tanggal untuk Firebase (YYYY_MM_DD)
+      
+      const ref = db.ref('qc_glazing/' + cleanDate);
+      ref.on('value', (snapshot) => {
+        const rawData = snapshot.val();
+        allBaskets = [];
+
+        if (rawData) {
+          // Konversi object Firebase ke array
+          const keys = Object.keys(rawData).sort((a, b) => parseInt(a) - parseInt(b));
+          keys.forEach(k => {
+            const item = rawData[k];
+            allBaskets.push({
+              no: parseInt(item.no) || (allBaskets.length + 1),
+              time: item.time || '',
+              temp: item.temp || '',
+              prod: item.prod || 'Slipper Lobster',
+              initWt: item.initWt !== "" && item.initWt !== undefined ? parseFloat(item.initWt) : '',
+              deglazeWt: item.deglazeWt !== "" && item.deglazeWt !== undefined ? parseFloat(item.deglazeWt) : '',
+              grossWt: item.grossWt !== "" && item.grossWt !== undefined ? parseFloat(item.grossWt) : '',
+              remarks: item.remarks || ''
+            });
+          });
+        }
+
+        const totalPages = Math.max(1, Math.ceil(allBaskets.length / ROWS_PER_PAGE));
+        const targetRows = totalPages * ROWS_PER_PAGE;
+        for (let i = allBaskets.length + 1; i <= targetRows; i++) {
+          allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
+        }
+
+        refreshNextAwalNo();
+        refreshGrossDropdown();
+        updatePageSelector();
+        updatePreviewSheet();
       });
     }
 
-    function fetchLiveData(callback) {
+    function loadDataFromFirebase() {
+      listenFirebaseData();
+      alert("✅ Data arsip tanggal tersebut berhasil dimuat dari Firebase!");
+    }
+
+    function saveToFirebase(basketNo, dataObj) {
       const curDate = document.getElementById('operator-prod-date').value || document.getElementById('doc-date').value;
-      if (!SCRIPT_URL) return;
-
-      fetch(SCRIPT_URL + "?tanggal=" + encodeURIComponent(curDate), {
-        method: 'GET',
-        mode: 'cors'
-      })
-        .then(res => res.json())
-        .then(data => {
-          allBaskets = [];
-          if (data && data.length > 0) {
-            data.forEach(item => {
-              allBaskets.push({
-                no: parseInt(item.no) || (allBaskets.length + 1),
-                time: item.time || '',
-                temp: item.temp || '',
-                prod: item.prod || 'Slipper Lobster',
-                initWt: item.initWt !== "" ? parseFloat(item.initWt) : '',
-                deglazeWt: item.deglazeWt !== "" ? parseFloat(item.deglazeWt) : (item.initWt !== "" ? parseFloat(item.initWt) : ''),
-                grossWt: item.grossWt !== "" ? parseFloat(item.grossWt) : '',
-                remarks: item.remarks || ''
-              });
-            });
-          }
-
-          const totalPages = Math.max(1, Math.ceil(allBaskets.length / ROWS_PER_PAGE));
-          const targetRows = totalPages * ROWS_PER_PAGE;
-          for (let i = allBaskets.length + 1; i <= targetRows; i++) {
-            allBaskets.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
-          }
-
-          refreshNextAwalNo();
-          refreshGrossDropdown();
-          updatePageSelector();
-          updatePreviewSheet();
-
-          if (typeof callback === 'function') callback();
+      const cleanDate = curDate.replace(/-/g, '_');
+      
+      db.ref('qc_glazing/' + cleanDate + '/' + basketNo).set(dataObj)
+        .then(() => {
+          console.log("Berhasil disimpan ke Firebase!");
         })
         .catch(err => {
-          console.error("Gagal mengambil data dari spreadsheet:", err);
-          if (allBaskets.length === 0) {
-            allBaskets = createEmptyBaskets();
-            updatePreviewSheet();
-          }
-          if (typeof callback === 'function') callback();
+          console.error("Gagal menyimpan ke Firebase:", err);
+          alert("Gagal menyimpan ke database cloud.");
         });
-    }
-
-    function createEmptyBaskets() {
-      const list = [];
-      for (let i = 1; i <= ROWS_PER_PAGE; i++) {
-        list.push({ no: i, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' });
-      }
-      return list;
-    }
-
-    function loadDataFromSheets() {
-      fetchLiveData();
-      alert("✅ Data arsip berhasil dimuat dari Google Spreadsheet!");
     }
 
     // OTORISASI ADMIN MODAL
@@ -893,22 +898,6 @@
       localStorage.removeItem('SIG_' + id.toUpperCase());
     }
 
-    function sendToSpreadsheet(dataObj) {
-      if (!SCRIPT_URL || !SCRIPT_URL.startsWith('http')) return;
-
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataObj)
-      }).then(() => {
-        console.log("Berhasil terkirim ke Google Sheets:", dataObj);
-        setTimeout(fetchLiveData, 1200); 
-      }).catch(err => {
-        console.warn("Gagal sinkron ke Sheets:", err);
-      });
-    }
-
     function stepBasketNo(delta) {
       const input = document.getElementById('in-awal-no');
       let current = parseInt(input.value) || 1;
@@ -975,18 +964,18 @@
 
       document.getElementById('in-awal-wt').value = '';
 
-      sendToSpreadsheet({
-        aksi: 'TIMBANG_AWAL',
-        tanggal: document.getElementById('doc-date').value,
-        no_basket: no,
-        waktu: time,
+      // Cari data lama jika sudah ada (misal update gross) agar tidak terhapus
+      const existing = allBaskets.find(b => b.no === no) || {};
+
+      saveToFirebase(no, {
+        no: no,
+        time: time,
         temp: temp,
-        produk: prod,
-        timbang_awal: initWt,
-        deglaze_wt: initWt,
-        timbang_gross: '',
-        glaze_pct: '',
-        remarks: ''
+        prod: prod,
+        initWt: initWt,
+        deglazeWt: initWt,
+        grossWt: existing.grossWt || '',
+        remarks: existing.remarks || ''
       });
 
       document.getElementById('in-awal-wt').focus();
@@ -1010,22 +999,14 @@
       document.getElementById('in-gross-remarks').value = '';
       document.getElementById('calculated-glaze').innerText = '';
 
-      let pct = '';
-      if (item.initWt && grossWt) {
-        pct = (((grossWt - item.initWt) / item.initWt) * 100).toFixed(1) + '%';
-      }
-
-      sendToSpreadsheet({
-        aksi: 'TIMBANG_GROSS',
-        tanggal: document.getElementById('doc-date').value,
-        no_basket: no,
-        waktu: item.time,
+      saveToFirebase(no, {
+        no: no,
+        time: item.time,
         temp: item.temp,
-        produk: item.prod,
-        timbang_awal: item.initWt,
-        deglaze_wt: item.initWt,
-        timbang_gross: grossWt,
-        glaze_pct: pct,
+        prod: item.prod,
+        initWt: item.initWt,
+        deglazeWt: item.deglazeWt || item.initWt,
+        grossWt: grossWt,
         remarks: remarks
       });
     }
@@ -1059,12 +1040,6 @@
 
     function formatTime(val) {
       if (!val) return '';
-      if (val.includes('1899') || val.includes('T')) {
-        const d = new Date(val);
-        if (!isNaN(d.getTime())) {
-          return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-        }
-      }
       return val;
     }
 
@@ -1162,6 +1137,34 @@
       }
     }
 
+    // FITUR DOWNLOAD EXCEL (.xlsx)
+    function downloadExcel() {
+      const curTgl = document.getElementById('doc-date').value || 'laporan';
+      const validData = allBaskets.filter(b => b.initWt !== '');
+
+      if (validData.length === 0) {
+        alert("Tidak ada data untuk didownload pada tanggal ini!");
+        return;
+      }
+
+      let excelRows = validData.map(b => ({
+        "No Basket": b.no,
+        "Waktu": b.time,
+        "Suhu (°C)": b.temp,
+        "Produk": b.prod,
+        "Timbang Awal (g)": b.initWt,
+        "Deglaze Wt (g)": b.deglazeWt || b.initWt,
+        "Timbang Gross (g)": b.grossWt || "",
+        "Keterangan": b.remarks || ""
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(excelRows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "QC Glazing");
+
+      XLSX.writeFile(workbook, `QC_Glazing_Slipper_Lobster_${curTgl}.xlsx`);
+    }
+
     function printSinglePage() {
       const tgl = document.getElementById('doc-date').value || 'laporan';
       document.getElementById('preview-prod-date').innerText = formatDateIndo(tgl);
@@ -1188,8 +1191,7 @@
         console.error(err);
         btn.innerHTML = originalText;
         btn.disabled = false;
-        alert("Gagal mendownload PDF. Mencoba cetak standar...");
-        window.print();
+        alert("Gagal mendownload PDF.");
       });
     }
   </script>
