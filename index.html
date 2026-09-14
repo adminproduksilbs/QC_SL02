@@ -1163,12 +1163,10 @@
       XLSX.writeFile(workbook, `QC_Glazing_Slipper_Lobster_${curTgl}.xlsx`);
     }
 
-    // MENGGUNAKAN METODE CETAK/SAVE PDF NATIVE BROWSER (DIJAMIN LANGSUNG JALAN & PAS 1 HALAMAN)
     function printSinglePage() {
       const tgl = document.getElementById('doc-date').value || 'laporan';
       document.getElementById('preview-prod-date').innerText = formatDateIndo(tgl);
       
-      // Ubah judul dokumen sementara agar nama file PDF otomatis sesuai tanggal saat di-save sebagai PDF
       const oldTitle = document.title;
       document.title = `QC_Glazing_Slipper_Lobster_${tgl}`;
       
