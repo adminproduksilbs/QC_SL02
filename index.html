@@ -74,7 +74,7 @@
         <input type="password" id="input-pin" inputmode="numeric" maxlength="6" placeholder="••••" 
           class="w-full text-center tracking-[0.4em] text-3xl font-black py-2.5 border-2 border-slate-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-blue-50/20 font-mono transition">
         <p id="pin-error" class="text-rose-600 text-xs font-bold hidden">⚠️ PIN Salah! Coba lagi.</p>
-        <p class="text-[10px] text-slate-400"> <b class="text-slate-600 font-mono"></b></p>
+        <p class="text-[10px] text-slate-400">PIN Masuk: <b class="text-slate-600 font-mono">0112</b></p>
       </div>
 
       <div class="grid grid-cols-2 gap-2 pt-1">
@@ -123,7 +123,7 @@
         <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain" onerror="this.style.display='none'">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
-          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood</p>
+          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02 (Firebase Cloud)</p>
         </div>
       </div>
       
@@ -151,7 +151,7 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Sinkronisasi Real-time</span>
+          <span class="text-[10px] text-slate-400">Sinkronisasi Real-time via Firebase Cloud</span>
         </div>
       </div>
       <div class="w-full sm:w-auto flex items-center gap-2">
@@ -248,7 +248,7 @@
           </div>
 
           <div class="flex items-center justify-between pt-1">
-            <span class="text-[11px] text-slate-400">Otomatis berurutan dari database</span>
+            <span class="text-[11px] text-slate-400">Otomatis berurutan +1 dari database</span>
             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg shadow transition flex items-center gap-1">
               <span>+ Simpan Timbang Awal</span>
             </button>
@@ -272,7 +272,7 @@
         <form id="form-timbang-gross" onsubmit="handleTimbangGross(event)" class="space-y-3 text-xs">
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-slate-600 mb-1">Pilih Basket Antrean</label>
+              <label class="block font-semibold text-slate-600 mb-1">Pilih Basket Antrean (Urut Terendah)</label>
               <select id="in-gross-no" onchange="syncGrossAwalWt()" class="w-full border border-amber-300 bg-amber-50/40 rounded-lg px-2.5 py-2 font-bold text-slate-800 outline-none focus:ring-2 focus:ring-amber-500">
                 <option value="">-- Pilih Keranjang --</option>
               </select>
@@ -310,7 +310,7 @@
     <!-- LOG 10 BASKET TERAKHIR -->
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir</h3>
+        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Real-time Firebase)</h3>
         <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 40 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
@@ -357,7 +357,7 @@
           📊 Download Excel (.xlsx)
         </button>
         <button onclick="printSinglePage()" class="bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-blue-900/20 flex items-center gap-2 transition active:scale-95">
-          🖨️ Cetak PDF
+          🖨️ Cetak PDF A4
         </button>
       </div>
     </div>
