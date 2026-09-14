@@ -26,7 +26,7 @@
     }
     .table-qc th, .table-qc td {
       border: 1px solid #000;
-      padding: 1px 3px;
+      padding: 0.5px 2px;
     }
   </style>
 </head>
@@ -284,7 +284,7 @@
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Real-time Firebase)</h3>
-        <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 40 baris ada di <b>Panel Admin & Cetak</b></span>
+        <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 50 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse min-w-[650px]">
@@ -361,9 +361,9 @@
         </div>
 
         <div class="bg-blue-50/80 p-3 rounded-xl border border-blue-200 flex flex-col justify-center">
-          <label class="block font-bold text-blue-900 mb-1">Pilih Halaman Cetak (Kapasitas: 40 Baris / Lembar)</label>
+          <label class="block font-bold text-blue-900 mb-1">Pilih Halaman Cetak (Kapasitas: 50 Baris / Lembar)</label>
           <select id="select-print-page" onchange="updatePreviewSheet()" class="w-full bg-white border border-blue-300 rounded-lg px-2.5 py-1.5 text-blue-900 font-bold outline-none">
-            <option value="1">Halaman 1 (Basket #1 - #40)</option>
+            <option value="1">Halaman 1 (Basket #1 - #50)</option>
           </select>
         </div>
       </div>
@@ -402,32 +402,32 @@
       </div>
     </div>
 
-    <!-- 3. PREVIEW CETAK FORMULIR ASLI F-QC-SL-02 -->
-    <div id="print-page-wrapper" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 overflow-x-auto">
+    <!-- 3. PREVIEW CETAK FORMULIR ASLI F-QC-SL-02 (Tanpa Garis Tepi Luar) -->
+    <div id="print-page-wrapper" class="bg-white rounded-2xl p-4 sm:p-6 overflow-x-auto">
       <div class="flex items-center justify-between mb-3 no-print">
         <h3 class="font-bold text-sm text-slate-700 flex items-center gap-1.5">
-          <span>📄 Pratinjau Dokumen 1 Halaman A4 (Format F-QC-SL-02 Asli - 40 Baris)</span>
+          <span>📄 Pratinjau Dokumen 1 Halaman A4 (Format F-QC-SL-02 Asli - 50 Baris)</span>
         </h3>
         <span class="text-xs text-slate-400">Hasil download PDF akan persis 1 lembar A4</span>
       </div>
 
-      <div id="print-page" class="bg-white mx-auto border border-slate-300 text-black text-[11px] leading-tight" style="width: 195mm; min-height: 287mm; box-sizing: border-box; background: white; padding: 4mm;">
+      <div id="print-page" class="bg-white mx-auto text-black text-[10px] leading-tight" style="width: 195mm; min-height: 287mm; box-sizing: border-box; background: white; padding: 2mm;">
         
         <!-- KOP HEADER -->
         <table class="w-full border-collapse border-[2px] border-black mb-1">
           <tr>
             <td class="border border-black text-center p-1.5 w-1/4 align-middle">
               <div class="flex flex-col items-center justify-center">
-                <img src="logo.png" alt="LBS" style="height: 40px; width: auto; max-width: 90px; margin: 0 auto 2px auto; display: block; object-fit: contain;" onerror="this.style.display='none'">
-                <div class="text-[9px] font-bold leading-tight">PT. Lampung Bay Seafood</div>
+                <img src="logo.png" alt="LBS" style="height: 35px; width: auto; max-width: 85px; margin: 0 auto 2px auto; display: block; object-fit: contain;" onerror="this.style.display='none'">
+                <div class="text-[8.5px] font-bold leading-tight">PT. Lampung Bay Seafood</div>
               </div>
             </td>
             <td class="border border-black text-center p-1 w-1/2 align-middle">
-              <div class="text-[12px] font-bold leading-snug">
+              <div class="text-[11px] font-bold leading-snug">
                 Catatan Timbangan Sebelum Glazing (De-Glaze) &<br>Timbang Glazing
               </div>
             </td>
-            <td class="border border-black p-1 text-[8px] w-1/4 align-top">
+            <td class="border border-black p-1 text-[7.5px] w-1/4 align-top">
               <div class="grid grid-cols-2"><span>Document No.</span> <b>: F-QC-SL-02</b></div>
               <div class="grid grid-cols-2"><span>Page / Halaman</span> <b id="preview-page-no">: 1 dari 1</b></div>
               <div class="grid grid-cols-2"><span>Revised No.</span> <b>: 02</b></div>
@@ -435,67 +435,67 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3" class="border border-black px-2 py-0.5 text-[8px]">
+            <td colspan="3" class="border border-black px-2 py-0.5 text-[7.5px]">
               Jl. Raya Tanjung Bintang No.101 Desa Serdang Kec. Tanjung Bintang
             </td>
           </tr>
         </table>
 
-        <div class="text-[9.5px] font-bold mb-1">
+        <div class="text-[9px] font-bold mb-1">
           Production Date : <span id="preview-prod-date" class="font-normal underline">................................</span>
         </div>
 
-        <!-- TABEL 40 BARIS PAS DI 1 LEMBAR A4 -->
+        <!-- TABEL 50 BARIS PAS DI 1 LEMBAR A4 -->
         <table class="table-qc text-center">
           <thead>
-            <tr class="bg-slate-100 font-bold text-[8px]" style="height: 22px;">
-              <th style="width: 4%;">No<br><i class="text-[6.5px] font-normal">No</i></th>
-              <th style="width: 9%;">Time<br><i class="text-[6.5px] font-normal">Waktu</i></th>
-              <th style="width: 7%;">Temp.<br>0°C</th>
-              <th style="width: 22%;">Product<br><i class="text-[6.5px] font-normal">Produk</i></th>
-              <th style="width: 14%;">(1)<br>Timbang Awal</th>
-              <th style="width: 14%;">(2)<br>DEGLAZE WT</th>
-              <th style="width: 16%;">(3)<br>TIMBANG GROSS<br>SETELAH GLAZING</th>
-              <th style="width: 14%;">Remarks<br><i class="text-[6.5px] font-normal">Keterangan</i></th>
+            <tr class="bg-slate-100 font-bold text-[7.5px]" style="height: 20px;">
+              <th style="width: 4%;">No</th>
+              <th style="width: 9%;">Time</th>
+              <th style="width: 7%;">Temp.°C</th>
+              <th style="width: 22%;">Product</th>
+              <th style="width: 14%;">(1) Timbang Awal</th>
+              <th style="width: 14%;">(2) DEGLAZE WT</th>
+              <th style="width: 16%;">(3) TIMBANG GROSS</th>
+              <th style="width: 14%;">Remarks</th>
             </tr>
           </thead>
-          <tbody id="preview-tbody" class="font-mono text-[9px]">
-            <!-- 40 Baris Terisi Otomatis -->
+          <tbody id="preview-tbody" class="font-mono text-[8.5px]">
+            <!-- 50 Baris Terisi Otomatis -->
           </tbody>
         </table>
 
-        <div class="text-[7.5px] font-bold mt-0.5">
+        <div class="text-[7px] font-bold mt-0.5">
           Note : Pastikan tidak ada bunga es ketika timbang Deglaze WT
         </div>
 
         <!-- TANDA TANGAN -->
-        <div class="mt-1 grid grid-cols-3 text-center text-[8px]">
+        <div class="mt-1 grid grid-cols-3 text-center text-[7.5px]">
           <div>
             <u><b>Prepared by,</b></u><br>
-            <i class="text-[7px]">Dilaksanakan Oleh,</i>
-            <div class="h-9 flex items-center justify-center">
-              <img id="img-sig-qc" class="max-h-8 max-w-[100px] object-contain hidden" alt="TTD QC">
+            <i class="text-[6.5px]">Dilaksanakan Oleh,</i>
+            <div class="h-8 flex items-center justify-center">
+              <img id="img-sig-qc" class="max-h-7 max-w-[90px] object-contain hidden" alt="TTD QC">
             </div>
             <b>Quality Control Date,</b><br>
-            <i class="text-[7px]">Quality Control Tgl: <span id="sig-full-qc" class="font-mono font-bold">--/--/----</span></i>
+            <i class="text-[6.5px]">Quality Control Tgl: <span id="sig-full-qc" class="font-mono font-bold">--/--/----</span></i>
           </div>
           <div>
             <u><b>Checked by,</b></u><br>
-            <i class="text-[7px]">Diperiksa Oleh,</i>
-            <div class="h-9 flex items-center justify-center">
-              <img id="img-sig-kabag" class="max-h-8 max-w-[100px] object-contain hidden" alt="TTD Kabag">
+            <i class="text-[6.5px]">Diperiksa Oleh,</i>
+            <div class="h-8 flex items-center justify-center">
+              <img id="img-sig-kabag" class="max-h-7 max-w-[90px] object-contain hidden" alt="TTD Kabag">
             </div>
             <b>Production Kabag. Date,</b><br>
-            <i class="text-[7px]">Kabag Produksi. Tgl: <span id="sig-full-kabag" class="font-mono font-bold">--/--/----</span></i>
+            <i class="text-[6.5px]">Kabag Produksi. Tgl: <span id="sig-full-kabag" class="font-mono font-bold">--/--/----</span></i>
           </div>
           <div>
             <u><b>Approved by,</b></u><br>
-            <i class="text-[7px]">Disetujui Oleh,</i>
-            <div class="h-9 flex items-center justify-center">
-              <img id="img-sig-sddc" class="max-h-8 max-w-[100px] object-contain hidden" alt="TTD SDDC">
+            <i class="text-[6.5px]">Disetujui Oleh,</i>
+            <div class="h-8 flex items-center justify-center">
+              <img id="img-sig-sddc" class="max-h-7 max-w-[90px] object-contain hidden" alt="TTD SDDC">
             </div>
             <b>SDDC Date,</b><br>
-            <i class="text-[7px]">SDDC Tgl: <span id="sig-full-sddc" class="font-mono font-bold">--/--/----</span></i>
+            <i class="text-[6.5px]">SDDC Tgl: <span id="sig-full-sddc" class="font-mono font-bold">--/--/----</span></i>
           </div>
         </div>
 
@@ -520,7 +520,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const ROWS_PER_PAGE = 40;
+    const ROWS_PER_PAGE = 50; // Kapasitas diubah jadi 50 baris per halaman
     const APP_PIN = "0112";    
     const ADMIN_PIN = "2022";  
     let isAdminUnlocked = false;
@@ -1040,7 +1040,7 @@
       for (let i = 0; i < ROWS_PER_PAGE; i++) {
         const item = pageItems[i] || { no: startIndex + i + 1, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' };
         const tr = document.createElement('tr');
-        tr.style.height = "17.5px";
+        tr.style.height = "14.5px"; // Disesuaikan agar 50 baris pas di 1 halaman
 
         tr.innerHTML = `
           <td style="font-weight: bold;">${item.no}</td>
@@ -1136,7 +1136,6 @@
       XLSX.writeFile(workbook, `QC_Glazing_Slipper_Lobster_${curTgl}.xlsx`);
     }
 
-    // FUNGSI DOWNLOAD PDF OTOMATIS (MENGGUNAKAN html2pdf)
     function downloadPdf() {
       const tgl = document.getElementById('doc-date').value || 'laporan';
       document.getElementById('preview-prod-date').innerText = formatDateIndo(tgl);
