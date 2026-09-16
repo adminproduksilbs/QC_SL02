@@ -47,7 +47,7 @@
         <input type="password" id="input-pin" inputmode="numeric" maxlength="6" placeholder="••••" 
           class="w-full text-center tracking-[0.4em] text-3xl font-black py-2.5 border-2 border-slate-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-blue-50/20 font-mono transition">
         <p id="pin-error" class="text-rose-600 text-xs font-bold hidden">⚠️ PIN Salah! Coba lagi.</p>
-        <p class="text-[10px] text-slate-400"> <b class="text-slate-600 font-mono"></b></p>
+        <p class="text-[10px] text-slate-400"><b class="text-slate-600 font-mono"></b></p>
       </div>
 
       <div class="grid grid-cols-2 gap-2 pt-1">
@@ -96,7 +96,7 @@
         <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain" onerror="this.style.display='none'">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
-          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood</p>
+          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02 (Firebase Cloud)</p>
         </div>
       </div>
       
@@ -124,7 +124,7 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Sinkronisasi Real-time</span>
+          <span class="text-[10px] text-slate-400">Sinkronisasi Real-time via Firebase Cloud</span>
         </div>
       </div>
       <div class="w-full sm:w-auto flex items-center gap-2">
@@ -221,7 +221,7 @@
           </div>
 
           <div class="flex items-center justify-between pt-1">
-            <span class="text-[11px] text-slate-400">Otomatis berurutan dari database</span>
+            <span class="text-[11px] text-slate-400">Otomatis berurutan +1 dari database</span>
             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg shadow transition flex items-center gap-1">
               <span>+ Simpan Timbang Awal</span>
             </button>
@@ -280,10 +280,10 @@
 
     </div>
 
-    <!-- LOG 10 BASKET TERAKHIR -->
+    <!-- LOG 10 BASKET TERAKHIR (DAPAT DIKLIK UNTUK EDIT CEPAT) -->
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir</h3>
+        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Klik baris untuk edit cepat / ubah remarks)</h3>
         <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 50 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
@@ -341,7 +341,7 @@
         <span class="text-xl">🔥</span>
         <div>
           <span class="font-bold text-emerald-900">Database Status:</span>
-          <span class="text-emerald-700 ml-1">Terhubung ke Database (Real-time Cloud Sync).</span>
+          <span class="text-emerald-700 ml-1">Terhubung ke Firebase Realtime Database (Real-time Cloud Sync).</span>
         </div>
       </div>
     </div>
@@ -402,11 +402,11 @@
       </div>
     </div>
 
-    <!-- 3. PREVIEW CETAK FORMULIR ASLI F-QC-SL-02 (Tanpa Garis Tepi Luar) -->
+    <!-- 3. PREVIEW CETAK FORMULIR ASLI F-QC-SL-02 -->
     <div id="print-page-wrapper" class="bg-white rounded-2xl p-4 sm:p-6 overflow-x-auto">
       <div class="flex items-center justify-between mb-3 no-print">
         <h3 class="font-bold text-sm text-slate-700 flex items-center gap-1.5">
-          <span>📄 Pratinjau Dokumen 1 Halaman</span>
+          <span>📄 Pratinjau Dokumen 1 Halaman A4 (Format F-QC-SL-02 Asli - 50 Baris)</span>
         </h3>
         <span class="text-xs text-slate-400">Hasil download PDF akan persis 1 lembar A4</span>
       </div>
@@ -520,7 +520,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const ROWS_PER_PAGE = 50; // Kapasitas diubah jadi 50 baris per halaman
+    const ROWS_PER_PAGE = 50;
     const APP_PIN = "0112";    
     const ADMIN_PIN = "2022";  
     let isAdminUnlocked = false;
@@ -925,6 +925,33 @@
       }
     }
 
+    // Fungsi klik baris tabel untuk edit cepat
+    function editBasket(no, time, temp, prod, initWt, grossWt, remarks) {
+      document.getElementById('in-awal-no').value = no;
+      if (time) document.getElementById('in-awal-time').value = time;
+      if (temp) document.getElementById('in-awal-temp').value = temp;
+      if (prod) document.getElementById('in-awal-prod').value = prod;
+      
+      if (initWt) {
+        let strWt = String(initWt);
+        if (strWt.startsWith("22")) {
+          document.getElementById('in-awal-wt').value = strWt.substring(2);
+        } else {
+          document.getElementById('in-awal-wt').value = strWt;
+        }
+      }
+
+      if (grossWt) {
+        document.getElementById('in-gross-wt').value = grossWt;
+      }
+      if (remarks) {
+        document.getElementById('in-gross-remarks').value = remarks;
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      alert(`✏️ Memuat Basket #${no} ke Form Input. Silakan ubah data atau remarks lalu klik simpan untuk memperbarui.`);
+    }
+
     function handleTimbangAwal(e) {
       e.preventDefault();
       const no = parseInt(document.getElementById('in-awal-no').value);
@@ -1040,7 +1067,7 @@
       for (let i = 0; i < ROWS_PER_PAGE; i++) {
         const item = pageItems[i] || { no: startIndex + i + 1, time: '', temp: '', prod: '', initWt: '', deglazeWt: '', grossWt: '', remarks: '' };
         const tr = document.createElement('tr');
-        tr.style.height = "14.5px"; // Disesuaikan agar 50 baris pas di 1 halaman
+        tr.style.height = "14.5px";
 
         tr.innerHTML = `
           <td style="font-weight: bold;">${item.no}</td>
@@ -1091,9 +1118,12 @@
               glazePctText = `<span class="font-bold text-emerald-600">+${p}%</span>`;
             }
             const row = document.createElement('tr');
-            row.className = "hover:bg-slate-50 transition";
+            row.className = "hover:bg-blue-50 cursor-pointer transition";
+            row.title = "Klik untuk edit basket ini";
+            row.onclick = () => editBasket(b.no, b.time, b.temp, b.prod, b.initWt, b.grossWt, b.remarks);
+
             row.innerHTML = `
-              <td class="py-2 px-3 font-bold text-blue-900">#${b.no}</td>
+              <td class="py-2 px-3 font-bold text-blue-900">#${b.no} ✏️</td>
               <td class="py-2 px-3 text-slate-600">${formatTime(b.time) || '-'}</td>
               <td class="py-2 px-3 text-slate-600">${b.temp || '-'}°C</td>
               <td class="py-2 px-3 text-slate-700">${b.prod || '-'}</td>
