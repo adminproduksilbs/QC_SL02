@@ -156,7 +156,7 @@
         </div>
         <span class="text-2xl opacity-70">✅</span>
       </div>
-      <div class="bg-blue-50/70 p-3.5 rounded-xl border border-blue-200 shadow-sm flex items-center justify-between">
+      <div class="bg-blue-50/70 p-3.5 rounded-xl border border-emerald-200 shadow-sm flex items-center justify-between">
         <div>
           <span class="text-blue-700 block font-medium">Rata-rata Glaze</span>
           <span id="stat-avg-glaze" class="text-xl font-black text-blue-700">- %</span>
@@ -245,7 +245,7 @@
         <form id="form-timbang-gross" onsubmit="handleTimbangGross(event)" class="space-y-3 text-xs">
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-slate-600 mb-1">Pilih Basket Antrean (Urut Terendah)</label>
+              <label class="block font-semibold text-slate-600 mb-1">Pilih / Ketik No. Basket untuk Update Gross</label>
               <select id="in-gross-no" onchange="syncGrossAwalWt()" class="w-full border border-amber-300 bg-amber-50/40 rounded-lg px-2.5 py-2 font-bold text-slate-800 outline-none focus:ring-2 focus:ring-amber-500">
                 <option value="">-- Pilih Keranjang --</option>
               </select>
@@ -272,7 +272,7 @@
           <div class="flex items-center justify-between pt-1">
             <span id="calculated-glaze" class="text-xs font-bold text-emerald-600"></span>
             <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-4 py-2 rounded-lg shadow transition flex items-center gap-1">
-              <span>✓ Simpan Timbang Gross</span>
+              <span>✓ Update / Simpan Gross</span>
             </button>
           </div>
         </form>
@@ -283,7 +283,7 @@
     <!-- LOG 10 BASKET TERAKHIR -->
     <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2 text-xs">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Klik baris untuk edit cepat)</h3>
+        <h3 class="font-bold text-slate-700">📋 10 Basket Terakhir (Klik baris untuk edit instan)</h3>
         <span class="text-slate-400 text-[11px]">Cetak dokumen lengkap 50 baris ada di <b>Panel Admin & Cetak</b></span>
       </div>
       <div class="overflow-x-auto">
@@ -402,7 +402,7 @@
       </div>
     </div>
 
-    <!-- 3. PREVIEW CETAK FORMULIR ASLI F-QC-SL-02 (KLIK BARIS TABEL DI BAWAH JUGA BISA UNTUK EDIT) -->
+    <!-- 3. PREVIEW CETAK FORMULIR ASLI F-QC-SL-02 -->
     <div id="print-page-wrapper" class="bg-white rounded-2xl p-4 sm:p-6 overflow-x-auto">
       <div class="flex items-center justify-between mb-3 no-print">
         <h3 class="font-bold text-sm text-slate-700 flex items-center gap-1.5">
@@ -894,20 +894,21 @@
     function refreshGrossDropdown() {
       const sel = document.getElementById('in-gross-no');
       if (!sel) return;
-      sel.innerHTML = '<option value="">-- Pilih Keranjang --</option>';
+      sel.innerHTML = '<option value="">-- Pilih Keranjang / Semua Terisi --</option>';
 
-      let pending = allBaskets.filter(b => b.initWt !== '' && (!b.grossWt || b.grossWt === ''));
-      pending.sort((a, b) => a.no - b.no);
+      // Menampilkan SELURUH keranjang yang sudah ada timbang awalnya agar bisa dipilih ulang untuk edit gross/remarks kapan saja
+      let activeList = allBaskets.filter(b => b.initWt !== '');
+      activeList.sort((a, b) => a.no - b.no);
 
-      pending.forEach(b => {
+      activeList.forEach(b => {
         const opt = document.createElement('option');
         opt.value = b.no;
-        opt.innerText = `Basket #${b.no} (Awal: ${b.initWt}g - Jam ${formatTime(b.time)})`;
+        opt.innerText = `Basket #${b.no} (Awal: ${b.initWt}g, Gross: ${b.grossWt || 'Belum'})`;
         sel.appendChild(opt);
       });
 
-      if (pending.length > 0) {
-        sel.value = pending[0].no;
+      if (activeList.length > 0) {
+        sel.value = activeList[activeList.length - 1].no;
         syncGrossAwalWt();
       } else {
         const displayWt = document.getElementById('display-awal-wt');
@@ -920,6 +921,16 @@
       const item = allBaskets.find(b => b.no === selNo);
       if (item && item.initWt) {
         document.getElementById('display-awal-wt').innerText = item.initWt + ' gram';
+        if (item.grossWt) {
+          document.getElementById('in-gross-wt').value = item.grossWt;
+        } else {
+          document.getElementById('in-gross-wt').value = '';
+        }
+        if (item.remarks) {
+          document.getElementById('in-gross-remarks').value = item.remarks;
+        } else {
+          document.getElementById('in-gross-remarks').value = '';
+        }
       } else {
         document.getElementById('display-awal-wt').innerText = '- gram';
       }
@@ -941,22 +952,13 @@
         }
       }
 
-      if (grossWt) {
-        document.getElementById('in-gross-wt').value = grossWt;
-      } else {
-        document.getElementById('in-gross-wt').value = '';
-      }
+      // Set dropdown gross ke nomor basket tersebut agar langsung terpilih di form kanan
+      const grossSelect = document.getElementById('in-gross-no');
+      if (grossSelect) grossSelect.value = no;
+      syncGrossAwalWt();
 
-      if (remarks) {
-        document.getElementById('in-gross-remarks').value = remarks;
-      } else {
-        document.getElementById('in-gross-remarks').value = '';
-      }
-
-      // Pindah ke tab operator & scroll ke atas form input
-      switchTab('operator');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      alert(`✏️ Memuat Basket #${no} ke Form Input. Silakan sesuaikan data / remarks lalu klik simpan.`);
+      alert(`✏️ Basket #${no} dimuat ke Form. Silakan perbarui timbangan/remarks lalu klik simpan.`);
     }
 
     function handleTimbangAwal(e) {
@@ -991,7 +993,7 @@
       e.preventDefault();
       const no = parseInt(document.getElementById('in-gross-no').value);
       if (!no) {
-        alert("Pilih nomor basket antrean terlebih dahulu!");
+        alert("Pilih nomor basket terlebih dahulu di Form (2)!");
         return;
       }
 
@@ -1076,7 +1078,6 @@
         const tr = document.createElement('tr');
         tr.style.height = "14.5px";
         
-        // Jika baris sudah terisi data, buat bisa diklik untuk edit
         if (item.initWt !== '') {
           tr.className = "hover:bg-amber-100 cursor-pointer transition";
           tr.title = `Klik untuk edit Basket #${item.no}`;
