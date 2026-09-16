@@ -322,7 +322,7 @@
           <span>🛠️ Panel Admin QC</span>
           <span class="text-xs font-semibold px-2.5 py-0.5 bg-amber-100 text-amber-900 rounded-full">PIN: 2022 Terverifikasi</span>
         </h2>
-        <p class="text-xs text-slate-400">Pengaturan dokumen, tanda tangan digital cloud, download Excel/PDF, dan arsip harian.</p>
+        <p class="text-xs text-slate-400">Pengaturan dokumen, tanda tangan digital, download Excel/PDF, dan arsip harian.</p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -341,7 +341,7 @@
         <span class="text-xl">🔥</span>
         <div>
           <span class="font-bold text-emerald-900">Database Status:</span>
-          <span class="text-emerald-700 ml-1">Terhubung ke Firebase Realtime Database (Real-time Cloud Sync & TTD).</span>
+          <span class="text-emerald-700 ml-1">Terhubung ke Firebase Realtime Database (Real-time Cloud Sync).</span>
         </div>
       </div>
     </div>
@@ -368,9 +368,9 @@
         </div>
       </div>
 
-      <!-- 3 KOTAK TANDA TANGAN DIGITAL CLOUD (TERSINKRONISASI) -->
+      <!-- 3 KOTAK TANDA TANGAN DIGITAL (WARNA HITAM) -->
       <div>
-        <label class="block font-bold text-slate-700 mb-1.5">Tanda Tangan Digital Pihak Pengesah (Sinkronisasi Cloud)</label>
+        <label class="block font-bold text-slate-700 mb-1.5">Tanda Tangan Digital Pihak Pengesah (Tinta Hitam)</label>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
             <div class="flex justify-between items-center mb-1">
@@ -378,7 +378,7 @@
               <button type="button" onclick="clearSignature('qc')" class="text-[10px] text-rose-600 hover:underline font-bold">Hapus</button>
             </div>
             <canvas id="canvas-qc" class="w-full h-20 bg-white border border-dashed border-slate-300 rounded-lg cursor-crosshair touch-none"></canvas>
-            <span class="text-[9px] text-slate-400 text-center mt-1">Tanda tangan tersimpan di cloud</span>
+            <span class="text-[9px] text-slate-400 text-center mt-1">Gores TTD di atas (warna hitam)</span>
           </div>
 
           <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
@@ -387,7 +387,7 @@
               <button type="button" onclick="clearSignature('kabag')" class="text-[10px] text-rose-600 hover:underline font-bold">Hapus</button>
             </div>
             <canvas id="canvas-kabag" class="w-full h-20 bg-white border border-dashed border-slate-300 rounded-lg cursor-crosshair touch-none"></canvas>
-            <span class="text-[9px] text-slate-400 text-center mt-1">Tanda tangan tersimpan di cloud</span>
+            <span class="text-[9px] text-slate-400 text-center mt-1">Gores TTD di atas (warna hitam)</span>
           </div>
 
           <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
@@ -396,7 +396,7 @@
               <button type="button" onclick="clearSignature('sddc')" class="text-[10px] text-rose-600 hover:underline font-bold">Hapus</button>
             </div>
             <canvas id="canvas-sddc" class="w-full h-20 bg-white border border-dashed border-slate-300 rounded-lg cursor-crosshair touch-none"></canvas>
-            <span class="text-[9px] text-slate-400 text-center mt-1">Tanda tangan tersimpan di cloud</span>
+            <span class="text-[9px] text-slate-400 text-center mt-1">Gores TTD di atas (warna hitam)</span>
           </div>
         </div>
       </div>
@@ -546,6 +546,7 @@
       initSignPad('qc');
       initSignPad('kabag');
       initSignPad('sddc');
+      loadSavedSignatures();
 
       listenFirebaseData();
     });
@@ -597,7 +598,6 @@
       }
 
       listenFirebaseData();
-      listenFirebaseSignatures();
     }
 
     function syncOperatorDate(val) {
@@ -606,15 +606,14 @@
 
     function manualRefreshData() {
       listenFirebaseData();
-      listenFirebaseSignatures();
-      alert("✅ Data & Tanda Tangan berhasil disinkronkan dari Firebase Cloud!");
+      alert("✅ Data berhasil disinkronkan dari Firebase Cloud!");
     }
 
     function listenFirebaseData() {
       const curDate = document.getElementById('operator-prod-date').value || document.getElementById('doc-date').value;
       const cleanDate = curDate.replace(/-/g, '_');
       
-      const ref = db.ref('qc_glazing/' + cleanDate + '/baskets');
+      const ref = db.ref('qc_glazing/' + cleanDate);
       ref.on('value', (snapshot) => {
         const rawData = snapshot.val();
         allBaskets = [];
@@ -623,16 +622,19 @@
           const keys = Object.keys(rawData).sort((a, b) => parseInt(a) - parseInt(b));
           keys.forEach(k => {
             const item = rawData[k];
-            allBaskets.push({
-              no: parseInt(item.no) || (allBaskets.length + 1),
-              time: item.time || '',
-              temp: item.temp || '',
-              prod: item.prod || 'Slipper Lobster',
-              initWt: item.initWt !== "" && item.initWt !== undefined ? parseFloat(item.initWt) : '',
-              deglazeWt: item.deglazeWt !== "" && item.deglazeWt !== undefined ? parseFloat(item.deglazeWt) : '',
-              grossWt: item.grossWt !== "" && item.grossWt !== undefined ? parseFloat(item.grossWt) : '',
-              remarks: item.remarks || ''
-            });
+            // Pastikan hanya membaca data nomor basket (mengabaikan jika ada key lain di dalam folder tanggal)
+            if (item && typeof item === 'object' && item.no !== undefined) {
+              allBaskets.push({
+                no: parseInt(item.no) || (allBaskets.length + 1),
+                time: item.time || '',
+                temp: item.temp || '',
+                prod: item.prod || 'Slipper Lobster',
+                initWt: item.initWt !== "" && item.initWt !== undefined ? parseFloat(item.initWt) : '',
+                deglazeWt: item.deglazeWt !== "" && item.deglazeWt !== undefined ? parseFloat(item.deglazeWt) : '',
+                grossWt: item.grossWt !== "" && item.grossWt !== undefined ? parseFloat(item.grossWt) : '',
+                remarks: item.remarks || ''
+              });
+            }
           });
         }
 
@@ -649,68 +651,22 @@
       });
     }
 
-    function listenFirebaseSignatures() {
-      const curDate = document.getElementById('doc-date').value || document.getElementById('operator-prod-date').value;
-      const cleanDate = curDate.replace(/-/g, '_');
-
-      const ref = db.ref('qc_glazing/' + cleanDate + '/signatures');
-      ref.on('value', (snapshot) => {
-        const sigs = snapshot.val() || {};
-        ['qc', 'kabag', 'sddc'].forEach(id => {
-          const dataUrl = sigs[id];
-          const imgTarget = document.getElementById('img-sig-' + id);
-          const pad = signPads[id];
-
-          if (dataUrl) {
-            if (imgTarget) {
-              imgTarget.src = dataUrl;
-              imgTarget.classList.remove('hidden');
-            }
-            if (pad) {
-              const img = new Image();
-              img.onload = () => {
-                pad.ctx.clearRect(0, 0, pad.canvas.width, pad.canvas.height);
-                pad.ctx.drawImage(img, 0, 0);
-              };
-              img.src = dataUrl;
-            }
-          } else {
-            if (imgTarget) {
-              imgTarget.src = '';
-              imgTarget.classList.add('hidden');
-            }
-            if (pad) {
-              pad.ctx.clearRect(0, 0, pad.canvas.width, pad.canvas.height);
-            }
-          }
-        });
-      });
+    function loadDataFromFirebase() {
+      listenFirebaseData();
+      alert("✅ Data arsip tanggal tersebut berhasil dimuat dari Firebase!");
     }
 
     function saveToFirebase(basketNo, dataObj) {
       const curDate = document.getElementById('operator-prod-date').value || document.getElementById('doc-date').value;
       const cleanDate = curDate.replace(/-/g, '_');
       
-      db.ref('qc_glazing/' + cleanDate + '/baskets/' + basketNo).set(dataObj)
+      db.ref('qc_glazing/' + cleanDate + '/' + basketNo).set(dataObj)
         .then(() => {
           console.log("Berhasil disimpan ke Firebase!");
         })
         .catch(err => {
           console.error("Gagal menyimpan ke Firebase:", err);
           alert("Gagal menyimpan ke database cloud.");
-        });
-    }
-
-    function saveSignatureToFirebase(id, dataUrl) {
-      const curDate = document.getElementById('doc-date').value || document.getElementById('operator-prod-date').value;
-      const cleanDate = curDate.replace(/-/g, '_');
-
-      db.ref('qc_glazing/' + cleanDate + '/signatures/' + id).set(dataUrl)
-        .then(() => {
-          console.log("TTD berhasil disinkronkan ke cloud!");
-        })
-        .catch(err => {
-          console.error("Gagal menyimpan TTD:", err);
         });
     }
 
@@ -778,7 +734,7 @@
           const pad = signPads[id];
           if (pad) {
             pad.canvas.width = pad.canvas.parentElement.clientWidth || 250;
-            listenFirebaseSignatures();
+            loadSavedSignatures();
           }
         });
       }, 50);
@@ -857,8 +813,7 @@
       function stopDraw() {
         if (!drawing) return;
         drawing = false;
-        const dataUrl = canvas.toDataURL("image/png");
-        saveSignatureToFirebase(id, dataUrl);
+        saveSignature(id);
       }
 
       canvas.addEventListener('mousedown', startDraw);
@@ -872,6 +827,39 @@
       signPads[id] = { canvas, ctx };
     }
 
+    function saveSignature(id) {
+      const pad = signPads[id];
+      if (!pad) return;
+      const dataUrl = pad.canvas.toDataURL("image/png");
+      const imgTarget = document.getElementById('img-sig-' + id);
+      if (imgTarget) {
+        imgTarget.src = dataUrl;
+        imgTarget.classList.remove('hidden');
+      }
+      localStorage.setItem('SIG_' + id.toUpperCase(), dataUrl);
+    }
+
+    function loadSavedSignatures() {
+      ['qc', 'kabag', 'sddc'].forEach(id => {
+        const saved = localStorage.getItem('SIG_' + id.toUpperCase());
+        if (saved) {
+          const img = new Image();
+          img.onload = () => {
+            if (signPads[id]) {
+              signPads[id].ctx.drawImage(img, 0, 0);
+            }
+          };
+          img.src = saved;
+
+          const imgTarget = document.getElementById('img-sig-' + id);
+          if (imgTarget) {
+            imgTarget.src = saved;
+            imgTarget.classList.remove('hidden');
+          }
+        }
+      });
+    }
+
     function clearSignature(id) {
       const pad = signPads[id];
       if (!pad) return;
@@ -881,7 +869,7 @@
         imgTarget.src = '';
         imgTarget.classList.add('hidden');
       }
-      saveSignatureToFirebase(id, "");
+      localStorage.removeItem('SIG_' + id.toUpperCase());
     }
 
     function stepBasketNo(delta) {
@@ -1136,7 +1124,7 @@
         recentTbody.innerHTML = '';
         const recentDone = [...filled].reverse().slice(0, 10);
         if (recentDone.length === 0) {
-          recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal ini. Silakan input timbang awal di atas.</td></tr>`;
+          recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal tersebut. Silakan pilih tanggal yang sesuai di atas.</td></tr>`;
         } else {
           recentDone.forEach(b => {
             let glazePctText = '-';
@@ -1180,7 +1168,7 @@
         "Waktu": b.time,
         "Suhu (°C)": b.temp,
         "Produk": b.prod,
-        "Timbang Awal (g)": b.initWt,
+        "Timbang Awal (g)": b.initWN: b.initWt,
         "Deglaze Wt (g)": b.deglazeWt || b.initWt,
         "Timbang Gross (g)": b.grossWt || "",
         "Keterangan": b.remarks || ""
@@ -1203,10 +1191,11 @@
         filename:     `QC_Glazing_Slipper_Lobster_${tgl}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'orientation: 'portrait' }
       };
 
       const btn = event.target;
+      const originalTitle = document.title;
       const originalText = btn.innerHTML;
       btn.innerHTML = "⏳ Mengunduh PDF...";
       btn.disabled = true;
