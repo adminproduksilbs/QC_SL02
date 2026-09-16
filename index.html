@@ -47,7 +47,7 @@
         <input type="password" id="input-pin" inputmode="numeric" maxlength="6" placeholder="••••" 
           class="w-full text-center tracking-[0.4em] text-3xl font-black py-2.5 border-2 border-slate-200 rounded-2xl outline-none focus:border-blue-600 focus:bg-blue-50/20 font-mono transition">
         <p id="pin-error" class="text-rose-600 text-xs font-bold hidden">⚠️ PIN Salah! Coba lagi.</p>
-        <p class="text-[10px] text-slate-400"> <b class="text-slate-600 font-mono"></b></p>
+        <p class="text-[10px] text-slate-400">PIN Masuk: <b class="text-slate-600 font-mono">0112</b></p>
       </div>
 
       <div class="grid grid-cols-2 gap-2 pt-1">
@@ -96,7 +96,7 @@
         <img src="logo.png" alt="LBS Logo" class="h-10 w-auto bg-white p-0.5 rounded shadow-sm object-contain" onerror="this.style.display='none'">
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">QC Glazing Slipper Lobster</h1>
-          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood</p>
+          <p class="text-xs text-blue-200">PT. Lampung Bay Seafood • F-QC-SL-02 (Firebase Cloud)</p>
         </div>
       </div>
       
@@ -124,7 +124,7 @@
         <span class="text-xl">📅</span>
         <div>
           <label class="block font-bold text-slate-800">Tanggal Produksi Aktif</label>
-          <span class="text-[10px] text-slate-400">Sinkronisasi Real-time</span>
+          <span class="text-[10px] text-slate-400">Sinkronisasi Real-time via Firebase Cloud</span>
         </div>
       </div>
       <div class="w-full sm:w-auto flex items-center gap-2">
@@ -221,7 +221,7 @@
           </div>
 
           <div class="flex items-center justify-between pt-1">
-            <span class="text-[11px] text-slate-400">Otomatis berurutan dari database</span>
+            <span class="text-[11px] text-slate-400">Otomatis berurutan +1 dari database</span>
             <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg shadow transition flex items-center gap-1">
               <span>+ Simpan Timbang Awal</span>
             </button>
@@ -322,7 +322,7 @@
           <span>🛠️ Panel Admin QC</span>
           <span class="text-xs font-semibold px-2.5 py-0.5 bg-amber-100 text-amber-900 rounded-full">PIN: 2022 Terverifikasi</span>
         </h2>
-        <p class="text-xs text-slate-400">Pengaturan dokumen, tanda tangan digital, download Excel/PDF, dan arsip harian.</p>
+        <p class="text-xs text-slate-400">Pengaturan dokumen, tanda tangan digital cloud, download Excel/PDF, dan arsip harian.</p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -341,7 +341,7 @@
         <span class="text-xl">🔥</span>
         <div>
           <span class="font-bold text-emerald-900">Database Status:</span>
-          <span class="text-emerald-700 ml-1">Terhubung Database (Real-time Cloud Sync).</span>
+          <span class="text-emerald-700 ml-1">Terhubung ke Firebase Realtime Database (Sinkronisasi Tanda Tangan Cloud Aktif).</span>
         </div>
       </div>
     </div>
@@ -368,9 +368,9 @@
         </div>
       </div>
 
-      <!-- 3 KOTAK TANDA TANGAN DIGITAL (WARNA HITAM) -->
+      <!-- 3 KOTAK TANDA TANGAN DIGITAL CLOUD (TERSINKRONISASI & PERMANEN) -->
       <div>
-        <label class="block font-bold text-slate-700 mb-1.5">Tanda Tangan Digital Pihak Pengesah (Tinta Hitam)</label>
+        <label class="block font-bold text-slate-700 mb-1.5">Tanda Tangan Digital Pihak Pengesah (Sinkronisasi Cloud)</label>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
             <div class="flex justify-between items-center mb-1">
@@ -378,7 +378,7 @@
               <button type="button" onclick="clearSignature('qc')" class="text-[10px] text-rose-600 hover:underline font-bold">Hapus</button>
             </div>
             <canvas id="canvas-qc" class="w-full h-20 bg-white border border-dashed border-slate-300 rounded-lg cursor-crosshair touch-none"></canvas>
-            <span class="text-[9px] text-slate-400 text-center mt-1">Gores TTD di atas (warna hitam)</span>
+            <span class="text-[9px] text-slate-400 text-center mt-1">Tersimpan di Cloud (Permanen)</span>
           </div>
 
           <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
@@ -387,7 +387,7 @@
               <button type="button" onclick="clearSignature('kabag')" class="text-[10px] text-rose-600 hover:underline font-bold">Hapus</button>
             </div>
             <canvas id="canvas-kabag" class="w-full h-20 bg-white border border-dashed border-slate-300 rounded-lg cursor-crosshair touch-none"></canvas>
-            <span class="text-[9px] text-slate-400 text-center mt-1">Gores TTD di atas (warna hitam)</span>
+            <span class="text-[9px] text-slate-400 text-center mt-1">Tersimpan di Cloud (Permanen)</span>
           </div>
 
           <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 flex flex-col justify-between">
@@ -396,7 +396,7 @@
               <button type="button" onclick="clearSignature('sddc')" class="text-[10px] text-rose-600 hover:underline font-bold">Hapus</button>
             </div>
             <canvas id="canvas-sddc" class="w-full h-20 bg-white border border-dashed border-slate-300 rounded-lg cursor-crosshair touch-none"></canvas>
-            <span class="text-[9px] text-slate-400 text-center mt-1">Gores TTD di atas (warna hitam)</span>
+            <span class="text-[9px] text-slate-400 text-center mt-1">Tersimpan di Cloud (Permanen)</span>
           </div>
         </div>
       </div>
@@ -546,9 +546,9 @@
       initSignPad('qc');
       initSignPad('kabag');
       initSignPad('sddc');
-      loadSavedSignatures();
 
       listenFirebaseData();
+      listenFirebaseSignatures();
     });
 
     function setupEvents() {
@@ -598,6 +598,7 @@
       }
 
       listenFirebaseData();
+      listenFirebaseSignatures();
     }
 
     function syncOperatorDate(val) {
@@ -606,7 +607,8 @@
 
     function manualRefreshData() {
       listenFirebaseData();
-      alert("✅ Data berhasil disinkronkan dari Firebase Cloud!");
+      listenFirebaseSignatures();
+      alert("✅ Data & Tanda Tangan berhasil disinkronkan dari Firebase Cloud!");
     }
 
     function listenFirebaseData() {
@@ -621,18 +623,20 @@
         if (rawData) {
           const keys = Object.keys(rawData).sort((a, b) => parseInt(a) - parseInt(b));
           keys.forEach(k => {
-            const item = rawData[k];
-            if (item && typeof item === 'object' && item.no !== undefined) {
-              allBaskets.push({
-                no: parseInt(item.no) || (allBaskets.length + 1),
-                time: item.time || '',
-                temp: item.temp || '',
-                prod: item.prod || 'Slipper Lobster',
-                initWt: item.initWt !== "" && item.initWt !== undefined ? parseFloat(item.initWt) : '',
-                deglazeWt: item.deglazeWt !== "" && item.deglazeWt !== undefined ? parseFloat(item.deglazeWt) : '',
-                grossWt: item.grossWt !== "" && item.grossWt !== undefined ? parseFloat(item.grossWt) : '',
-                remarks: item.remarks || ''
-              });
+            if (k !== 'signatures') {
+              const item = rawData[k];
+              if (item && typeof item === 'object' && item.no !== undefined) {
+                allBaskets.push({
+                  no: parseInt(item.no) || (allBaskets.length + 1),
+                  time: item.time || '',
+                  temp: item.temp || '',
+                  prod: item.prod || 'Slipper Lobster',
+                  initWt: item.initWt !== "" && item.initWt !== undefined ? parseFloat(item.initWt) : '',
+                  deglazeWt: item.deglazeWt !== "" && item.deglazeWt !== undefined ? parseFloat(item.deglazeWt) : '',
+                  grossWt: item.grossWt !== "" && item.grossWt !== undefined ? parseFloat(item.grossWt) : '',
+                  remarks: item.remarks || ''
+                });
+              }
             }
           });
         }
@@ -650,9 +654,42 @@
       });
     }
 
-    function loadDataFromFirebase() {
-      listenFirebaseData();
-      alert("✅ Data arsip tanggal tersebut berhasil dimuat dari Firebase!");
+    function listenFirebaseSignatures() {
+      const curDate = document.getElementById('doc-date').value || document.getElementById('operator-prod-date').value;
+      const cleanDate = curDate.replace(/-/g, '_');
+
+      const ref = db.ref('qc_glazing/' + cleanDate + '/signatures');
+      ref.on('value', (snapshot) => {
+        const sigs = snapshot.val() || {};
+        ['qc', 'kabag', 'sddc'].forEach(id => {
+          const dataUrl = sigs[id];
+          const imgTarget = document.getElementById('img-sig-' + id);
+          const pad = signPads[id];
+
+          if (dataUrl) {
+            if (imgTarget) {
+              imgTarget.src = dataUrl;
+              imgTarget.classList.remove('hidden');
+            }
+            if (pad) {
+              const img = new Image();
+              img.onload = () => {
+                pad.ctx.clearRect(0, 0, pad.canvas.width, pad.canvas.height);
+                pad.ctx.drawImage(img, 0, 0);
+              };
+              img.src = dataUrl;
+            }
+          } else {
+            if (imgTarget) {
+              imgTarget.src = '';
+              imgTarget.classList.add('hidden');
+            }
+            if (pad) {
+              pad.ctx.clearRect(0, 0, pad.canvas.width, pad.canvas.height);
+            }
+          }
+        });
+      });
     }
 
     function saveToFirebase(basketNo, dataObj) {
@@ -666,6 +703,19 @@
         .catch(err => {
           console.error("Gagal menyimpan ke Firebase:", err);
           alert("Gagal menyimpan ke database cloud.");
+        });
+    }
+
+    function saveSignatureToFirebase(id, dataUrl) {
+      const curDate = document.getElementById('doc-date').value || document.getElementById('operator-prod-date').value;
+      const cleanDate = curDate.replace(/-/g, '_');
+
+      db.ref('qc_glazing/' + cleanDate + '/signatures/' + id).set(dataUrl)
+        .then(() => {
+          console.log("TTD berhasil disinkronkan ke cloud!");
+        })
+        .catch(err => {
+          console.error("Gagal menyimpan TTD:", err);
         });
     }
 
@@ -733,7 +783,7 @@
           const pad = signPads[id];
           if (pad) {
             pad.canvas.width = pad.canvas.parentElement.clientWidth || 250;
-            loadSavedSignatures();
+            listenFirebaseSignatures();
           }
         });
       }, 50);
@@ -812,7 +862,8 @@
       function stopDraw() {
         if (!drawing) return;
         drawing = false;
-        saveSignature(id);
+        const dataUrl = canvas.toDataURL("image/png");
+        saveSignatureToFirebase(id, dataUrl);
       }
 
       canvas.addEventListener('mousedown', startDraw);
@@ -826,39 +877,6 @@
       signPads[id] = { canvas, ctx };
     }
 
-    function saveSignature(id) {
-      const pad = signPads[id];
-      if (!pad) return;
-      const dataUrl = pad.canvas.toDataURL("image/png");
-      const imgTarget = document.getElementById('img-sig-' + id);
-      if (imgTarget) {
-        imgTarget.src = dataUrl;
-        imgTarget.classList.remove('hidden');
-      }
-      localStorage.setItem('SIG_' + id.toUpperCase(), dataUrl);
-    }
-
-    function loadSavedSignatures() {
-      ['qc', 'kabag', 'sddc'].forEach(id => {
-        const saved = localStorage.getItem('SIG_' + id.toUpperCase());
-        if (saved) {
-          const img = new Image();
-          img.onload = () => {
-            if (signPads[id]) {
-              signPads[id].ctx.drawImage(img, 0, 0);
-            }
-          };
-          img.src = saved;
-
-          const imgTarget = document.getElementById('img-sig-' + id);
-          if (imgTarget) {
-            imgTarget.src = saved;
-            imgTarget.classList.remove('hidden');
-          }
-        }
-      });
-    }
-
     function clearSignature(id) {
       const pad = signPads[id];
       if (!pad) return;
@@ -868,7 +886,7 @@
         imgTarget.src = '';
         imgTarget.classList.add('hidden');
       }
-      localStorage.removeItem('SIG_' + id.toUpperCase());
+      saveSignatureToFirebase(id, "");
     }
 
     function stepBasketNo(delta) {
