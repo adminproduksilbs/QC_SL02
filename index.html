@@ -622,7 +622,6 @@
           const keys = Object.keys(rawData).sort((a, b) => parseInt(a) - parseInt(b));
           keys.forEach(k => {
             const item = rawData[k];
-            // Pastikan hanya membaca data nomor basket (mengabaikan jika ada key lain di dalam folder tanggal)
             if (item && typeof item === 'object' && item.no !== undefined) {
               allBaskets.push({
                 no: parseInt(item.no) || (allBaskets.length + 1),
@@ -1124,7 +1123,7 @@
         recentTbody.innerHTML = '';
         const recentDone = [...filled].reverse().slice(0, 10);
         if (recentDone.length === 0) {
-          recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal tersebut. Silakan pilih tanggal yang sesuai di atas.</td></tr>`;
+          recentTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-slate-400 font-sans">Belum ada data timbangan untuk tanggal ini. Silakan input timbang awal di atas.</td></tr>`;
         } else {
           recentDone.forEach(b => {
             let glazePctText = '-';
@@ -1168,7 +1167,7 @@
         "Waktu": b.time,
         "Suhu (°C)": b.temp,
         "Produk": b.prod,
-        "Timbang Awal (g)": b.initWN: b.initWt,
+        "Timbang Awal (g)": b.initWt,
         "Deglaze Wt (g)": b.deglazeWt || b.initWt,
         "Timbang Gross (g)": b.grossWt || "",
         "Keterangan": b.remarks || ""
@@ -1191,11 +1190,10 @@
         filename:     `QC_Glazing_Slipper_Lobster_${tgl}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'orientation: 'portrait' }
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       const btn = event.target;
-      const originalTitle = document.title;
       const originalText = btn.innerHTML;
       btn.innerHTML = "⏳ Mengunduh PDF...";
       btn.disabled = true;
